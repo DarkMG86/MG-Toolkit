@@ -1,0 +1,3 @@
+20250330
+	. support pour Windows 11 24H2 build 26200
+	. corrections mineures
