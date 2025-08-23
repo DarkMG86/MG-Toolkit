@@ -42,6 +42,36 @@ set yellow=[33m
 
 
 
+:: Vérification de la présence d'une mise à jour
+echo.
+call :titre
+echo.
+echo Vérification de la présence d'une mise à jour...
+echo.
+del "%TEMP%\version.txt" 1>nul 2>nul
+powershell -Command "(New-Object Net.WebClient).DownloadFile('https://github.com/DarkMG86/MG-Toolkit/raw/refs/heads/main/version.txt', '%TEMP%\version.txt')" 1>nul 2>nul
+set /p controle_version_toolkit=<%TEMP%\version.txt 1>nul 2>nul
+if exist "%TEMP%\version.txt" (
+	if not "%controle_version_toolkit%"=="%toolkit_version%" (
+		powershell -Command "(New-Object Net.WebClient).DownloadFile('https://github.com/DarkMG86/MG-Toolkit/raw/refs/heads/main/MG_Toolkit.cmd', '%~dp0MG_Toolkit_new.cmd')"
+		if exist "%~dp0MG_Toolkit_new.cmd" (
+			timeout /t 1 >nul
+			del /f "%~dp0MG_Toolkit.cmd"
+			rename "%~dp0MG_Toolkit_new.cmd" "MG_Toolkit.cmd"
+			echo La version %green%%controle_version_toolkit%%u% a été téléchargée avec succès
+			echo Veuillez exécuter à nouveau le programme
+			echo.
+			pause
+			exit /b
+		) else (
+			echo %red%Échec du téléchargement de la mise à jour%u%
+		)
+	)
+	echo %red%Échec de la vérification%u%
+)
+
+
+
 :: Test de la version de Windows utilisée
 :TestOS
 	set build_win=""
