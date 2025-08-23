@@ -1,4 +1,4 @@
-MG Toolkit est un scrpit batch autonome ayant pour but la maintenance d'un PC.
+MG Toolkit est un script batch autonome regroupant plusieurs fonctionnalités ayant pour but la maintenance d'un PC.
 
 OS minimum requis : Windows 10
 
