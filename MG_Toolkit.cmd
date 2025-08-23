@@ -5,7 +5,7 @@ chcp 1252 >nul
 setlocal DisableDelayedExpansion
 title MG Toolkit
 mode con cols=90 lines=45
-set toolkit_version=20250816
+set toolkit_version=20250823
 for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
 for /f "tokens=*" %%f in ('wmic os get Version /value ^| find "="') do set "%%f"
 for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=%%h& set build=%%i& set revision=%%j)
@@ -208,7 +208,6 @@ if "%bitness%"=="EM64T" (
 	echo 	Système d'exploitation : %Caption%
 	echo 	Architecture :           %archi%
 	echo 	Version :                %major%.%minor%.%build%.%revision% [%version_win%]
-	echo 	Version :                %Version%
 	for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLabEx" 2^>nul') do (
 		echo 	Build :                  %%b
 	)
