@@ -278,21 +278,6 @@ exit
 	echo.
     echo __________________________________________________________________________________________
 	echo.
-	echo [ Vérification de la présence d'une mise à jour ]
-	del "%TEMP%\version.txt" 1>nul 2>nul
-	powershell -Command "(New-Object Net.WebClient).DownloadFile('https://github.com/DarkMG86/MG-Toolkit/raw/refs/heads/main/version.txt', '%TEMP%\version.txt')" 1>nul 2>nul
-	set /p controle_version_toolkit=<%TEMP%\version.txt 1>nul 2>nul
-	if exist "%TEMP%\version.txt" (
-		if "%controle_version_toolkit%"=="%toolkit_version%" (
-			echo %green%OK%u%
-		) else (
-			echo %blink%La version %controle_version_toolkit% est disponible depuis la page d'accueil%u%
-		)
-	) else (
-		echo %red%Échec de la vérification%u%
-	)
-    echo __________________________________________________________________________________________
-	echo.
 	echo %green%                               Votre système est compatible%u%
 	echo %green%       !!! Il est recommandé de désactiver votre antivirus avant de poursuivre !!!%u%
     echo __________________________________________________________________________________________
