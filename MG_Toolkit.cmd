@@ -315,9 +315,7 @@ goto main
 	echo.
 	echo   %gray%%under%Divers%u%
 	echo.
-	echo 				20. Logithèque en ligne
-	echo.
-	echo 	21. Télécharger dernière version	22. Télécharger packages Windows Update
+	echo 	20. Logithèque en ligne			21. Télécharger packages Windows Update
 	echo.
     echo __________________________________________________________________________________________
 	echo.
@@ -342,8 +340,7 @@ goto main
 	if /i "%choix%"=="18" (goto reparation_wu)
 	if /i "%choix%"=="19" (goto Windows_update)
 	if /i "%choix%"=="20" (start https://1drv.ms/f/c/011dbcd351618514/EhSFYVHTvB0ggAHe-gMAAAABVx8HKWQvEjg8qcNBmAesMg)
-	if /i "%choix%"=="21" (start https://1drv.ms/f/c/011dbcd351618514/EhSFYVHTvB0ggAEGAgQAAAABOMEjMYgnwerK-fsI6Mowaw)
-	if /i "%choix%"=="22" (start https://1drv.ms/f/c/011dbcd351618514/EhSFYVHTvB0ggAG56gMAAAABzpb74buvreHFXUhLGtM1Ow)
+	if /i "%choix%"=="21" (start https://1drv.ms/f/c/011dbcd351618514/EhSFYVHTvB0ggAG56gMAAAABzpb74buvreHFXUhLGtM1Ow)
 	if /i "%choix%"=="0" (exit)
 goto main
 
