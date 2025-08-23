@@ -67,7 +67,8 @@ if exist "%TEMP%\version.txt" (
 			echo %red%Échec du téléchargement de la mise à jour%u%
 		)
 	)
-	echo %red%Échec de la vérification%u%
+) else (
+	echo %red%Échec de la vérification de la mise à jour%u%
 )
 
 
