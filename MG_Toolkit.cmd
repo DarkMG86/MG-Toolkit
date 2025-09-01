@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20250825
+set toolkit_version=20250901
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
@@ -203,6 +203,11 @@ if exist "%TEMP%\version.txt" (
 		set version_win=24H2
 	)
 	ver | find /i "version 10.0.26200" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=10.0.26100
+		set version_win=25H2
+	)
+	ver | find /i "version 10.0.26220" 1>nul 2>nul
 	if %errorlevel%==0 (
 		set build_win=10.0.26100
 		set version_win=25H2
@@ -1538,6 +1543,11 @@ goto main_wu_11
 	if %build% EQU 22621 (
 		echo %red%Installation du Feature Update Windows 11 - 23H2%u%
 		dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\0.FU\Windows11.0-KB5027397-%archi%.cab" /norestart
+		echo.
+	)
+	if %build% EQU 26100 (
+		echo %red%Installation du Feature Update Windows 11 - 25H2%u%
+		dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\0.FU\Windows11.0-KB5054156-%archi%.cab" /norestart
 		echo.
 	)
 	echo %red%Installation du correctif cumulatif .NET%u%
