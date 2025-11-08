@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20250901
+set toolkit_version=20251108
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
@@ -1399,9 +1399,6 @@ goto main_wu_10
 	echo %red%Installation de DirectX%u%
 	windows_update\Common\DirectX\DirectX_Redist_Repack_x86_x64.exe /ai /gm2
 	echo.
-	echo %red%Installation de MSXML 4 Service Pack 3%u%
-	windows_update\Common\MSXML\MSXML4-KB2758694-FRA.exe /quiet /norestart
-	echo.
 	echo %red%Installation des packages Visual Studio redistribuables%u%
 	windows_update\Common\VS_REDIST\VisualCppRedist_AIO_x86_x64.exe /ai /gm2
 	echo.
@@ -1475,6 +1472,9 @@ goto main_wu_10
 	)
 	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\9_0\') do (
 		windows_update\Common\DOTNET\Core\9_0\%%i /quiet /norestart
+	)
+	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\10_0\') do (
+		windows_update\Common\DOTNET\Core\10_0\%%i /quiet /norestart
 	)
 	echo.
 	echo %green%Installation terminée%u%
@@ -1578,9 +1578,6 @@ goto main_wu_11
 	echo %red%Installation de DirectX%u%
 	windows_update\Common\DirectX\DirectX_Redist_Repack_x86_x64.exe /ai /gm2
 	echo.
-	echo %red%Installation de MSXML 4 Service Pack 3%u%
-	windows_update\Common\MSXML\MSXML4-KB2758694-FRA.exe /quiet /norestart
-	echo.
 	echo %red%Installation des packages Visual Studio redistribuables%u%
 	windows_update\Common\VS_REDIST\VisualCppRedist_AIO_x86_x64.exe /ai /gm2
 	echo.
@@ -1648,6 +1645,9 @@ goto main_wu_11
 	)
 	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\9_0\') do (
 		windows_update\Common\DOTNET\Core\9_0\%%i /quiet /norestart
+	)
+	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\10_0\') do (
+		windows_update\Common\DOTNET\Core\10_0\%%i /quiet /norestart
 	)
 	echo.
 	echo %green%Installation terminée%u%
