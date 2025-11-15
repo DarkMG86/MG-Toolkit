@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20251108
+set toolkit_version=20251115
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
@@ -1337,18 +1337,18 @@ goto main_wu_10
 :10_up
 	echo.
 	echo %red%Installation de la mise à jour de la pile de maintenance%u%
-	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\1.SS\') do (
-		if exist windows_update\%build_win%\%archi%\1.SS\*.cab (
-			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\1.SS\%%i" /norestart
+	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\1.SSU\') do (
+		if exist windows_update\%build_win%\%archi%\1.SSU\*.cab (
+			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\1.SSU\%%i" /norestart
 		)
 	)
 	echo.
 	echo %red%Installation du correctif cumulatif%u%
-	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\2.CU\') do (
-		if exist windows_update\%build_win%\%archi%\2.CU\*.cab (
-			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\2.CU\%%i" /norestart
-		) else if exist windows_update\%build_win%\%archi%\2.CU\*.msu (
-			dism /online /add-package="windows_update\%build_win%\%archi%\2.CU\%%i" /norestart
+	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\2.LCU\') do (
+		if exist windows_update\%build_win%\%archi%\2.LCU\*.cab (
+			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\2.LCU\%%i" /norestart
+		) else if exist windows_update\%build_win%\%archi%\2.LCU\*.msu (
+			dism /online /add-package="windows_update\%build_win%\%archi%\2.LCU\%%i" /norestart
 		)
 	)
 	echo.
@@ -1532,11 +1532,11 @@ goto main_wu_11
 :11_up
 	echo.
 	echo %red%Installation du correctif cumulatif%u%
-	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\1.CU\') do (
-		if exist windows_update\%build_win%\%archi%\1.CU\*.cab (
-			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\1.CU\%%i" /norestart
-		) else if exist windows_update\%build_win%\%archi%\1.CU\*.msu (
-			dism /online /add-package="windows_update\%build_win%\%archi%\1.CU\%%i" /norestart
+	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\1.LCU\') do (
+		if exist windows_update\%build_win%\%archi%\1.LCU\*.cab (
+			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\1.LCU\%%i" /norestart
+		) else if exist windows_update\%build_win%\%archi%\1.LCU\*.msu (
+			dism /online /add-package="windows_update\%build_win%\%archi%\1.LCU\%%i" /norestart
 		)
 	)
 	echo.
