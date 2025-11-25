@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20251115
+set toolkit_version=20251125
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
@@ -211,6 +211,11 @@ if exist "%TEMP%\version.txt" (
 	if %errorlevel%==0 (
 		set build_win=10.0.26100
 		set version_win=25H2
+	)
+	ver | find /i "version 10.0.28000" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=10.0.28000
+		set version_win=26H1
 	)
 
 for /f "tokens=3 usebackq" %%a in (`reg query "HKLM\System\CurrentControlSet\Control\Session Manager\Environment" /v PROCESSOR_ARCHITECTURE`) do set "bitness=%%a"
