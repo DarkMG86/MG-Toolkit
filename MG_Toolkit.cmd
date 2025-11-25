@@ -3,11 +3,10 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20251125
+set toolkit_version=20251126
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
-for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
-for /f "tokens=*" %%f in ('wmic os get Version /value ^| find "="') do set "%%f"
+for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
 for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=%%h& set build=%%i& set revision=%%j)
 if %build% LSS 10240 (
 	goto OSNoOK
