@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20251126
+set toolkit_version=20251129
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -252,26 +252,6 @@ if "%bitness%"=="EM64T" (
 		echo 	Build :                  %%b
 	)
 	goto OSOK
-
-:install_not_possible
-	echo.
-	echo %red%Installation impossible sur ce système !%u%
-	echo.
-	pause
-	if %build% GEQ 22000 (
-		goto main_wu_11
-	)
-	goto main_wu_10
-
-:install_not_required
-	echo.
-	echo %red%Installation non requise sur ce système !%u%
-	echo.
-	pause
-	if %build% GEQ 22000 (
-		goto main_wu_11
-	)
-	goto main_wu_10
 
 :OSNoOK
 	echo.
@@ -1291,13 +1271,10 @@ goto main
 :: Windows Update
 :Windows_update
 	if exist "windows_update\%build_win%\" (
-		if %build% GEQ 22000 (
-			goto main_wu_11
-		)
-		goto main_wu_10
+		goto main_wu
 	) else (
 		echo.
-		echo %red%Windows Update offline n'est pas pris en charge par cette version%u%
+		echo %red%Windows Update n'est pas pris en charge car les fichiers nécessaires sont manquants%u%
 		echo %red%Pour une utilisation avec ce script, suivez ces instructions :%u%
 		echo %red%1. Créez un dossier 'windows_update' dans le même répertoire que le script%u%
 		echo %red%2. Téléchargez les dossiers 'Common' et '%build_win%' depuis le menu principal%u%
@@ -1312,8 +1289,8 @@ goto main
 
 
 
-:: Windows 10 / Server 2016 / Server 2019 / Server 2022 Update
-:main_wu_10
+:: Windows 10 / 11 / Server 2016 / Server 2019 / Server 2022 Update
+:main_wu
 	cls
 	echo.
 	call :titre
@@ -1330,13 +1307,13 @@ goto main
     echo __________________________________________________________________________________________
 	echo.
 	set /p choix=Sélectionnez la mise à jour à appliquer : 
-	if /i "%choix%"=="1" (goto 10_up)
-	if /i "%choix%"=="2" (goto 10_redist)
-	if /i "%choix%"=="3" (goto 10_uwp)
-	if /i "%choix%"=="4" (goto 10_net)
-	if /i "%choix%"=="5" (goto 10_definitions)
+	if /i "%choix%"=="1" (if %build% GEQ 22000 goto 11_up else goto 10_up)
+	if /i "%choix%"=="2" (goto wu_redist)
+	if /i "%choix%"=="3" (goto wu_uwp)
+	if /i "%choix%"=="4" (goto wu_net)
+	if /i "%choix%"=="5" (goto wu_definitions)
 	if /i "%choix%"=="0" (goto main)
-goto main_wu_10
+goto main_wu
 
 :10_up
 	echo.
@@ -1390,15 +1367,53 @@ goto main_wu_10
 	echo %green%Installation des correctifs terminée%u%
 	echo.
 	call :callforrestart
-goto main_wu_10
+goto main_wu
 
-:10_redist
+:11_up
+	echo.
+	echo %red%Installation du correctif cumulatif%u%
+	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\1.LCU\') do (
+		if exist windows_update\%build_win%\%archi%\1.LCU\*.cab (
+			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\1.LCU\%%i" /norestart
+		) else if exist windows_update\%build_win%\%archi%\1.LCU\*.msu (
+			dism /online /add-package="windows_update\%build_win%\%archi%\1.LCU\%%i" /norestart
+		)
+	)
+	echo.
+	if %build% EQU 22621 (
+		echo %red%Installation du Feature Update Windows 11 - 23H2%u%
+		dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\0.FU\Windows11.0-KB5027397-%archi%.cab" /norestart
+		echo.
+	)
+	if %build% EQU 26100 (
+		echo %red%Installation du Feature Update Windows 11 - 25H2%u%
+		dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\0.FU\Windows11.0-KB5054156-%archi%.cab" /norestart
+		echo.
+	)
+	echo %red%Installation du correctif cumulatif .NET%u%
+	reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.8.1" 1>nul 2>nul
+	if %errorlevel%==1 (
+		windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-enu.exe /quiet /norestart
+		windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-fra.exe /quiet /norestart
+	)
+	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\2.NET\') do (
+		if exist windows_update\%build_win%\%archi%\2.NET\*.cab (
+			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\2.NET\%%i" /norestart
+		)
+	)
+	echo.
+	echo %green%Installation des correctifs terminée%u%
+	echo.
+	call :callforrestart
+goto main_wu
+
+:wu_redist
 	echo.
 	if %archi% EQU ARM64 (
 		echo %red%L'architecture ARM64 n'est pas prise en charge%u%
 		echo.
 		pause
-		goto main_wu_10
+		goto main_wu
 	)
 	echo %red%Installation de DirectX%u%
 	windows_update\Common\DirectX\DirectX_Redist_Repack_x86_x64.exe /ai /gm2
@@ -1409,16 +1424,10 @@ goto main_wu_10
 	echo %green%Installation terminée%u%
 	echo.
 	pause
-goto main_wu_10
+goto main_wu
 
-:10_uwp
+:wu_uwp
 	echo.
-	if %archi% EQU ARM64 (
-		echo %red%L'architecture ARM64 n'est pas prise en charge%u%
-		echo.
-		pause
-		goto main_wu_10
-	)
 	echo %red%Installation des packages UWP%u%
 	cd windows_update\Common\UWP\dvd\
 	powershell.exe -executionpolicy bypass -command "Add-AppxProvisionedPackage -Online -PackagePath 50ea4d02e68f4217869d054e06374b74.appxbundle -LicensePath 50ea4d02e68f4217869d054e06374b74_License1.xml" 1>nul 2>nul
@@ -1431,12 +1440,12 @@ goto main_wu_10
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path 'lxp\%build_win%\%%i'" 1>nul 2>nul
 		)
 	)
-	for /f %%i in ('dir /B neutral\APPX') do (
-		powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path 'neutral\APPX\%%i'" 1>nul 2>nul
+	for /f %%i in ('dir /B APPX\') do (
+		powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path 'APPX\%%i'" 1>nul 2>nul
 	)
 	if %build% GEQ 17763 (
-		for /f %%i in ('dir /B neutral\MSIX') do (
-			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path 'neutral\MSIX\%%i'" 1>nul 2>nul
+		for /f %%i in ('dir /B MSIX\') do (
+			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path 'MSIX\%%i'" 1>nul 2>nul
 		)
 	)
 	cd /d %~dp0
@@ -1444,9 +1453,9 @@ goto main_wu_10
 	echo %green%Installation terminée%u%
 	echo.
 	pause
-goto main_wu_10
+goto main_wu
 
-:10_net
+:wu_net
 	echo.
 	echo %red%Installation de .NET Framework%u%
 	dism.exe /online /enable-feature /featurename:NetFX3 /quiet /norestart 1>nul 2>nul
@@ -1485,182 +1494,9 @@ goto main_wu_10
 	echo %green%Il est maintenant recommandé de redémarrer votre ordinateur%u%
 	echo.
 	call :callforrestart
-goto main_wu_10
+goto main_wu
 
-:10_definitions
-	echo.
-	echo %red%Installation de l'outil de supression des logiciels malveillants%u%
-	for /f %%i in ('dir /B windows_update\Common\AntiMalware\MSRT\%archi%\') do (
-		windows_update\Common\AntiMalware\MSRT\%archi%\%%i /quiet /norestart
-	)
-	echo.
-	echo %red%Installation de la mise jour de la plateforme Microsoft Defender%u%
-	windows_update\Common\AntiMalware\Definitions\%archi%\updateplatform.exe
-	echo.
-	echo %red%Installation de la mise à jour de définitions Microsoft Defender%u%
-	windows_update\Common\AntiMalware\Definitions\%archi%\mpam-fe.exe
-	echo.
-	echo %green%Installation terminée%u%
-	echo.
-	pause
-goto main_wu_10
-
-
-
-:: Windows 11 / Server 2025 Update
-:main_wu_11
-	cls
-	echo.
-	call :titre
-	echo.
-	echo 	%Caption% (%version_win% - %archi%)
-	echo.
-	echo 		1. Windows Update
-	echo 		2. Packages redistribuables
-	echo 		3. Packages UWP
-	echo 		4. .NET
-	echo 		5. Définitions antivirus
-	echo 		0. Retour au menu principal
-	echo.
-    echo __________________________________________________________________________________________
-	echo.
-	set /p choix=Sélectionnez la mise à jour à appliquer : 
-	if /i "%choix%"=="1" (goto 11_up)
-	if /i "%choix%"=="2" (goto 11_redist)
-	if /i "%choix%"=="3" (goto 11_uwp)
-	if /i "%choix%"=="4" (goto 11_net)
-	if /i "%choix%"=="5" (goto 11_definitions)
-	if /i "%choix%"=="0" (goto main)
-goto main_wu_11
-
-:11_up
-	echo.
-	echo %red%Installation du correctif cumulatif%u%
-	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\1.LCU\') do (
-		if exist windows_update\%build_win%\%archi%\1.LCU\*.cab (
-			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\1.LCU\%%i" /norestart
-		) else if exist windows_update\%build_win%\%archi%\1.LCU\*.msu (
-			dism /online /add-package="windows_update\%build_win%\%archi%\1.LCU\%%i" /norestart
-		)
-	)
-	echo.
-	if %build% EQU 22621 (
-		echo %red%Installation du Feature Update Windows 11 - 23H2%u%
-		dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\0.FU\Windows11.0-KB5027397-%archi%.cab" /norestart
-		echo.
-	)
-	if %build% EQU 26100 (
-		echo %red%Installation du Feature Update Windows 11 - 25H2%u%
-		dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\0.FU\Windows11.0-KB5054156-%archi%.cab" /norestart
-		echo.
-	)
-	echo %red%Installation du correctif cumulatif .NET%u%
-	reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.8.1" 1>nul 2>nul
-	if %errorlevel%==1 (
-		windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-enu.exe /quiet /norestart
-		windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-fra.exe /quiet /norestart
-	)
-	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\2.NET\') do (
-		if exist windows_update\%build_win%\%archi%\2.NET\*.cab (
-			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\2.NET\%%i" /norestart
-		)
-	)
-	echo.
-	echo %green%Installation des correctifs terminée%u%
-	echo.
-	call :callforrestart
-goto main_wu_11
-
-:11_redist
-	echo.
-	if %archi% EQU ARM64 (
-		echo %red%L'architecture ARM64 n'est pas prise en charge%u%
-		echo.
-		pause
-		goto main_wu_11
-	)
-	echo %red%Installation de DirectX%u%
-	windows_update\Common\DirectX\DirectX_Redist_Repack_x86_x64.exe /ai /gm2
-	echo.
-	echo %red%Installation des packages Visual Studio redistribuables%u%
-	windows_update\Common\VS_REDIST\VisualCppRedist_AIO_x86_x64.exe /ai /gm2
-	echo.
-	echo %green%Installation terminée%u%
-	echo.
-	pause
-goto main_wu_11
-
-:11_uwp
-	echo.
-	if %archi% EQU ARM64 (
-		echo %red%L'architecture ARM64 n'est pas prise en charge%u%
-		echo.
-		pause
-		goto main_wu_11
-	)
-	echo %red%Installation des packages UWP%u%
-	cd windows_update\Common\UWP\dvd\
-	powershell.exe -executionpolicy bypass -command "Add-AppxProvisionedPackage -Online -PackagePath 50ea4d02e68f4217869d054e06374b74.appxbundle -LicensePath 50ea4d02e68f4217869d054e06374b74_License1.xml" 1>nul 2>nul
-	cd ..
-	for /f %%i in ('dir /B redist\%archi%\') do (
-		powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path 'redist\%archi%\%%i'" 1>nul 2>nul
-	)
-	for /f %%i in ('dir /B lxp\%build_win%\') do (
-		powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path 'lxp\%build_win%\%%i'" 1>nul 2>nul
-	)
-	for /f %%i in ('dir /B neutral\APPX') do (
-		powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path 'neutral\APPX\%%i'" 1>nul 2>nul
-	)
-	for /f %%i in ('dir /B neutral\MSIX') do (
-		powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path 'neutral\MSIX\%%i'" 1>nul 2>nul
-	)
-	cd /d %~dp0
-	echo.
-	echo %green%Installation terminée%u%
-	echo.
-	pause
-goto main_wu_11
-
-:11_net
-	echo.
-	echo %red%Installation de .NET Framework%u%
-	dism.exe /online /enable-feature /featurename:NetFX3 /quiet /norestart 1>nul 2>nul
-	reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.8.1" 1>nul 2>nul
-	if %errorlevel%==1 (
-		windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-enu.exe /quiet /norestart
-		windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-fra.exe /quiet /norestart
-	)
-	echo.
-	echo %red%Installation de .NET%u%
-	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\3_1\') do (
-		windows_update\Common\DOTNET\Core\3_1\%%i /quiet /norestart
-	)
-	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\5_0\') do (
-		windows_update\Common\DOTNET\Core\5_0\%%i /quiet /norestart
-	)
-	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\6_0\') do (
-		windows_update\Common\DOTNET\Core\6_0\%%i /quiet /norestart
-	)
-	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\7_0\') do (
-		windows_update\Common\DOTNET\Core\7_0\%%i /quiet /norestart
-	)
-	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\8_0\') do (
-		windows_update\Common\DOTNET\Core\8_0\%%i /quiet /norestart
-	)
-	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\9_0\') do (
-		windows_update\Common\DOTNET\Core\9_0\%%i /quiet /norestart
-	)
-	for /f %%i in ('dir /B windows_update\Common\DOTNET\Core\10_0\') do (
-		windows_update\Common\DOTNET\Core\10_0\%%i /quiet /norestart
-	)
-	echo.
-	echo %green%Installation terminée%u%
-	echo %green%Il est maintenant recommandé de redémarrer votre ordinateur%u%
-	echo.
-	call :callforrestart
-goto main_wu_11
-
-:11_definitions
+:wu_definitions
 	echo.
 	echo %red%Installation de l'outil de supression des logiciels malveillants%u%
 	for /f %%i in ('dir /B windows_update\Common\AntiMalware\MSRT\%archi%\') do (
@@ -1679,7 +1515,7 @@ goto main_wu_11
 	echo %green%Installation terminée%u%
 	echo.
 	pause
-goto main_wu_11
+goto main_wu
 
 
 
