@@ -349,10 +349,7 @@ goto main
 	echo Il est nécessaire de désactiver votre antivirus avant de poursuivre !
 	echo.
 	pause
-	powershell -Command "(New-Object Net.WebClient).DownloadFile('https://dev.azure.com/massgrave/Microsoft-Activation-Scripts/_apis/git/repositories/Microsoft-Activation-Scripts/items?path=/MAS/All-In-One-Version-KL/MAS_AIO.cmd&download=true', 'add-on\MAS_AIO.cmd')" 1>nul 2>nul
-	call add-on\MAS_AIO.cmd
-	del "add-on\MAS_AIO.cmd" 1>nul 2>nul
-	mode con cols=90 lines=45
+	powershell -Command "(irm https://get.activated.win | iex)" 1>nul 2>nul
 goto main
 
 
@@ -1316,11 +1313,11 @@ goto main
 goto main_wu
 
 :wu_up
-	set lcu_path="2.LCU"
-	set net_path="3.NET"
+	set lcu_path=2.LCU
+	set net_path=3.NET
 	if %build% GEQ 22000 (
-		set lcu_path="1.LCU"
-		set net_path="2.NET"
+		set lcu_path=1.LCU
+		set net_path=2.NET
 	)
 	echo.
 	if %build% LSS 22000 (
