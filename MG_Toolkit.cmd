@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20251129
+set toolkit_version=20251130
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -283,9 +283,9 @@ goto main
 	echo.
 	call :titre
 	echo.
-	echo   %gray%%under%Activation Office/Windows%u%
+	echo   %gray%%under%Activation de Windows / Office / ESU%u%
 	echo.
-	echo 	1.  Activation Windows/Office (KMS)	2.  Status d'activation Windows/Office
+	echo 	1.  Activation (MAS)				2.  Status d'activation
 	echo.
 	echo   %gray%%under%Utilitaires de configuration et maintenance%u%
 	echo.
@@ -310,7 +310,7 @@ goto main
     echo __________________________________________________________________________________________
 	echo.
 	set /p choix=Sélectionnez l'opération à effectuer (0 pour quitter): 
-	if /i "%choix%"=="1" (goto activation_kms)
+	if /i "%choix%"=="1" (goto activation_mas)
 	if /i "%choix%"=="2" (goto activation_status)
 	if /i "%choix%"=="3" (goto configuration_performances)
 	if /i "%choix%"=="4" (goto configuration_privacy)
@@ -336,22 +336,22 @@ goto main
 
 
 
-:: Activation de Windows via KMS
-:activation_kms
+:: Activation de Windows / Office / ESU
+:activation_mas
 	cls
 	echo.
 	call :titre
 	echo.
-	echo %red%Activation de Windows - Office (KMS_VL_ALL - abbodi1406)%u%
+	echo %red%Activation de Windows - Office - ESU (MAS)%u%
 	echo.
 	echo IMPORTANT :
 	echo Une connexion Internet est requise.
-	echo Il est nécessaire de désactiver votre antivirus avant de poursuivre.
+	echo Il est nécessaire de désactiver votre antivirus avant de poursuivre !
 	echo.
 	pause
-	powershell -Command "(New-Object Net.WebClient).DownloadFile('https://github.com/abbodi1406/KMS_VL_ALL_AIO/raw/refs/heads/master/KMS_VL_ALL_AIO.cmd', 'add-on\KMS_VL_ALL_AIO.cmd')" 1>nul 2>nul
-	call add-on\KMS_VL_ALL_AIO.cmd
-	del "add-on\KMS_VL_ALL_AIO.cmd" 1>nul 2>nul
+	powershell -Command "(New-Object Net.WebClient).DownloadFile('https://dev.azure.com/massgrave/Microsoft-Activation-Scripts/_apis/git/repositories/Microsoft-Activation-Scripts/items?path=/MAS/All-In-One-Version-KL/MAS_AIO.cmd&download=true', 'add-on\MAS_AIO.cmd')" 1>nul 2>nul
+	call add-on\MAS_AIO.cmd
+	del "add-on\MAS_AIO.cmd" 1>nul 2>nul
 	mode con cols=90 lines=45
 goto main
 
@@ -1011,7 +1011,7 @@ goto main
 	echo.
 	call :titre
 	echo.
-	echo %red%Réparation du référentiel WMI"%u%
+	echo %red%Réparation du référentiel WMI%u%
 	net stop winmgmt /y 1>nul 2>nul
 	winmmgmt /salvagerepository 1>nul 2>nul
 	winmgmt /resetrepository 1>nul 2>nul
@@ -1270,7 +1270,7 @@ goto main
 
 :: Windows Update
 :Windows_update
-	if exist "windows_update\%build_win%\" (
+	if exist "windows_update\%build_win%\" if exist "windows_update\Common\" (
 		goto main_wu
 	) else (
 		echo.
@@ -1307,7 +1307,7 @@ goto main
     echo __________________________________________________________________________________________
 	echo.
 	set /p choix=Sélectionnez la mise à jour à appliquer : 
-	if /i "%choix%"=="1" (if %build% GEQ 22000 goto 11_up else goto 10_up)
+	if /i "%choix%"=="1" (goto wu_up)
 	if /i "%choix%"=="2" (goto wu_redist)
 	if /i "%choix%"=="3" (goto wu_uwp)
 	if /i "%choix%"=="4" (goto wu_net)
@@ -1315,21 +1315,29 @@ goto main
 	if /i "%choix%"=="0" (goto main)
 goto main_wu
 
-:10_up
-	echo.
-	echo %red%Installation de la mise à jour de la pile de maintenance%u%
-	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\1.SSU\') do (
-		if exist windows_update\%build_win%\%archi%\1.SSU\*.cab (
-			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\1.SSU\%%i" /norestart
-		)
+:wu_up
+	set lcu_path="2.LCU"
+	set net_path="3.NET"
+	if %build% GEQ 22000 (
+		set lcu_path="1.LCU"
+		set net_path="2.NET"
 	)
 	echo.
+	if %build% LSS 22000 (
+		echo %red%Installation de la mise à jour de la pile de maintenance%u%
+		for /f %%i in ('dir /B windows_update\%build_win%\%archi%\1.SSU\') do (
+			if exist windows_update\%build_win%\%archi%\1.SSU\*.cab (
+				dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\1.SSU\%%i" /norestart
+			)
+		)
+		echo.
+	)
 	echo %red%Installation du correctif cumulatif%u%
-	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\2.LCU\') do (
-		if exist windows_update\%build_win%\%archi%\2.LCU\*.cab (
-			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\2.LCU\%%i" /norestart
-		) else if exist windows_update\%build_win%\%archi%\2.LCU\*.msu (
-			dism /online /add-package="windows_update\%build_win%\%archi%\2.LCU\%%i" /norestart
+	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\%lcu_path%\') do (
+		if exist windows_update\%build_win%\%archi%\%lcu_path%\*.cab (
+			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\%lcu_path%\%%i" /norestart
+		) else if exist windows_update\%build_win%\%archi%\%lcu_path%\*.msu (
+			dism /online /add-package="windows_update\%build_win%\%archi%\%lcu_path%\%%i" /norestart
 		)
 	)
 	echo.
@@ -1350,36 +1358,6 @@ goto main_wu
 		dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\0.FU\Windows10.0-KB5016060-%archi%.cab" /norestart
 		echo.
 	)
-	echo %red%Installation du correctif cumulatif .NET%u%
-	if %build% GEQ 19042 (
-		reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.8.1" 1>nul 2>nul
-		if %errorlevel%==1 (
-			windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-enu.exe /quiet /norestart
-			windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-fra.exe /quiet /norestart
-		)
-	)
-	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\3.NET\') do (
-		if exist windows_update\%build_win%\%archi%\3.NET\*.cab (
-			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\3.NET\%%i" /norestart
-		)
-	)
-	echo.
-	echo %green%Installation des correctifs terminée%u%
-	echo.
-	call :callforrestart
-goto main_wu
-
-:11_up
-	echo.
-	echo %red%Installation du correctif cumulatif%u%
-	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\1.LCU\') do (
-		if exist windows_update\%build_win%\%archi%\1.LCU\*.cab (
-			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\1.LCU\%%i" /norestart
-		) else if exist windows_update\%build_win%\%archi%\1.LCU\*.msu (
-			dism /online /add-package="windows_update\%build_win%\%archi%\1.LCU\%%i" /norestart
-		)
-	)
-	echo.
 	if %build% EQU 22621 (
 		echo %red%Installation du Feature Update Windows 11 - 23H2%u%
 		dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\0.FU\Windows11.0-KB5027397-%archi%.cab" /norestart
@@ -1391,14 +1369,16 @@ goto main_wu
 		echo.
 	)
 	echo %red%Installation du correctif cumulatif .NET%u%
-	reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.8.1" 1>nul 2>nul
-	if %errorlevel%==1 (
-		windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-enu.exe /quiet /norestart
-		windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-fra.exe /quiet /norestart
+	if %build% GEQ 19042 (
+		reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.8.1" 1>nul 2>nul
+		if %errorlevel%==1 (
+			windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-enu.exe /quiet /norestart
+			windows_update\Common\DOTNET\Framework\4_8_1\ndp481-x86-x64-allos-fra.exe /quiet /norestart
+		)
 	)
-	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\2.NET\') do (
-		if exist windows_update\%build_win%\%archi%\2.NET\*.cab (
-			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\2.NET\%%i" /norestart
+	for /f %%i in ('dir /B windows_update\%build_win%\%archi%\%net_path%\') do (
+		if exist windows_update\%build_win%\%archi%\%net_path%\*.cab (
+			dism /online /add-package /packagepath:"windows_update\%build_win%\%archi%\%net_path%\%%i" /norestart
 		)
 	)
 	echo.
