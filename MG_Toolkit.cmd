@@ -285,7 +285,7 @@ goto main
 	echo.
 	echo   %gray%%under%Activation de Windows / Office / ESU%u%
 	echo.
-	echo 	1.  Activation (MAS)			2.  Status d'activation
+	echo 	1.  Activation (MAS)		2.  Status d'activation
 	echo.
 	echo   %gray%%under%Utilitaires de configuration et maintenance%u%
 	echo.
