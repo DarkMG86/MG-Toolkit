@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20251130
+set toolkit_version=20251201
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -1267,7 +1267,7 @@ goto main
 
 :: Windows Update
 :Windows_update
-	if exist "windows_update\%build_win%\" if exist "windows_update\Common\" (
+	if exist "windows_update\%build_win%\" (
 		goto main_wu
 	) else (
 		echo.
