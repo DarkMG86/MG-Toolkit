@@ -418,7 +418,7 @@ goto main
 		pause
 		cd /d %~dp0
 		goto main
-	if exist "%ProgramFiles%\Microsoft Office\Office16\root\OSPP.VBS" (
+	if exist "%ProgramFiles%\Microsoft Office\root\Office16\OSPP.VBS" (
 		cd /d "%ProgramFiles%\Microsoft Office\Office16"
 		echo.
 		cscript //nologo OSPP.VBS /dstatus
@@ -437,7 +437,7 @@ goto main
 		cd /d %~dp0
 		goto main
 	)
-	if exist "%ProgramFiles(x86)%\Microsoft Office\Office16\root\OSPP.VBS" (
+	if exist "%ProgramFiles(x86)%\Microsoft Office\root\Office16\OSPP.VBS" (
 		cd /d "%ProgramFiles(x86)%\Microsoft Office\Office16"
 		echo.
 		cscript //nologo OSPP.VBS /dstatus
@@ -1521,10 +1521,10 @@ goto main_wu
 
 :: Titre
 :titre
-	echo 			 %inverse% ============================================= %u%
-	echo 			 %inverse% ^|^|       MG Toolkit  (v%toolkit_version%)       ^|^| %u%
-	echo 			 %inverse% ^|^| https://github.com/DarkMG86/MG-Toolkit/ ^|^| %u%
-	echo 			 %inverse% ============================================= %u%
+	echo 			%inverse% ============================================= %u%
+	echo 			%inverse% ^|^|         MG Toolkit  (v%toolkit_version%)         ^|^| %u%
+	echo 			%inverse% ^|^| https://github.com/DarkMG86/MG-Toolkit/ ^|^| %u%
+	echo 			%inverse% ============================================= %u%
 	echo.
 goto :eof
 
