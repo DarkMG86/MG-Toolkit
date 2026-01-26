@@ -1522,7 +1522,7 @@ goto main_wu
 :: Titre
 :titre
 	echo 			 %inverse% ============================================= %u%
-	echo 			 %inverse% ^|^|    MG Toolkit  (v%toolkit_version%)    ^|^| %u%
+	echo 			 %inverse% ^|^|       MG Toolkit  (v%toolkit_version%)       ^|^| %u%
 	echo 			 %inverse% ^|^| https://github.com/DarkMG86/MG-Toolkit/ ^|^| %u%
 	echo 			 %inverse% ============================================= %u%
 	echo.
