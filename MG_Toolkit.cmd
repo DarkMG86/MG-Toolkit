@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20251216
+set toolkit_version=20260126
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -418,6 +418,15 @@ goto main
 		pause
 		cd /d %~dp0
 		goto main
+	if exist "%ProgramFiles%\Microsoft Office\Office16\root\OSPP.VBS" (
+		cd /d "%ProgramFiles%\Microsoft Office\Office16"
+		echo.
+		cscript //nologo OSPP.VBS /dstatus
+		echo.
+		pause
+		cd /d %~dp0
+		goto main
+	)
 	)
 	if exist "%ProgramFiles(x86)%\Microsoft Office\Office16\OSPP.VBS" (
 		cd /d "%ProgramFiles(x86)%\Microsoft Office\Office16"
@@ -428,7 +437,16 @@ goto main
 		cd /d %~dp0
 		goto main
 	)
-	echo
+	if exist "%ProgramFiles(x86)%\Microsoft Office\Office16\root\OSPP.VBS" (
+		cd /d "%ProgramFiles(x86)%\Microsoft Office\Office16"
+		echo.
+		cscript //nologo OSPP.VBS /dstatus
+		echo.
+		pause
+		cd /d %~dp0
+		goto main
+	)
+	echo.
 	echo Aucune version compatible d'Office n'a été détectée.
 	echo.
 	pause
@@ -1503,9 +1521,10 @@ goto main_wu
 
 :: Titre
 :titre
-	echo 			    %inverse% =============================== %u%
-	echo 			    %inverse% ^|^|  MG Toolkit  (v%toolkit_version%)  ^|^| %u%
-	echo 			    %inverse% =============================== %u%
+	echo 			 %inverse% ============================================= %u%
+	echo 			 %inverse% ^|^|    MG Toolkit  (v%toolkit_version%)    ^|^| %u%
+	echo 			 %inverse% ^|^| https://github.com/DarkMG86/MG-Toolkit/ ^|^| %u%
+	echo 			 %inverse% ============================================= %u%
 	echo.
 goto :eof
 
