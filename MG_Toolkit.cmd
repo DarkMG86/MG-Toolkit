@@ -419,7 +419,7 @@ goto main
 		cd /d %~dp0
 		goto main
 	if exist "%ProgramFiles%\Microsoft Office\root\Office16\OSPP.VBS" (
-		cd /d "%ProgramFiles%\Microsoft Office\Office16"
+		cd /d "%ProgramFiles%\Microsoft Office\root\Office16"
 		echo.
 		cscript //nologo OSPP.VBS /dstatus
 		echo.
@@ -438,7 +438,7 @@ goto main
 		goto main
 	)
 	if exist "%ProgramFiles(x86)%\Microsoft Office\root\Office16\OSPP.VBS" (
-		cd /d "%ProgramFiles(x86)%\Microsoft Office\Office16"
+		cd /d "%ProgramFiles(x86)%\Microsoft Office\root\Office16"
 		echo.
 		cscript //nologo OSPP.VBS /dstatus
 		echo.
