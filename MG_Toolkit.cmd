@@ -418,6 +418,7 @@ goto main
 		pause
 		cd /d %~dp0
 		goto main
+	)
 	if exist "%ProgramFiles%\Microsoft Office\root\Office16\OSPP.VBS" (
 		cd /d "%ProgramFiles%\Microsoft Office\root\Office16"
 		echo.
@@ -426,7 +427,6 @@ goto main
 		pause
 		cd /d %~dp0
 		goto main
-	)
 	)
 	if exist "%ProgramFiles(x86)%\Microsoft Office\Office16\OSPP.VBS" (
 		cd /d "%ProgramFiles(x86)%\Microsoft Office\Office16"
