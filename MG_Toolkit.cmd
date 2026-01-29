@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260126
+set toolkit_version=20260129
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -210,6 +210,11 @@ if exist "%TEMP%\version.txt" (
 	if %errorlevel%==0 (
 		set build_win=10.0.26100
 		set version_win=25H2
+	)
+	ver | find /i "version 10.0.26300" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=10.0.26100
+		set version_win=26H2
 	)
 	ver | find /i "version 10.0.28000" 1>nul 2>nul
 	if %errorlevel%==0 (
