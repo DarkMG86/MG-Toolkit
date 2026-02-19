@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260129
+set toolkit_version=20260219
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -554,7 +554,9 @@ goto main
 	echo.
 	echo %red%Configuration des fonctionnalités de Windows%u%
 	dism.exe /online /enable-feature /featurename:DirectPlay /all /quiet /norestart 1>nul 2>nul
-	dism.exe /online /enable-feature /featurename:NetFX3 /quiet /norestart 1>nul 2>nul
+	if %build% LSS 28000 (
+		dism.exe /online /enable-feature /featurename:NetFX3 /quiet /norestart 1>nul 2>nul
+	)
 	dism.exe /online /enable-feature /featurename:SMB1Protocol /all /quiet /norestart 1>nul 2>nul
 	echo.
 	echo %red%Configuration des services Windows%u%
@@ -760,7 +762,7 @@ goto main
 	echo.
 	set /p confirm=Confirmer ces informations (O/N) :
 	echo.
-	if /i "%confirm%" neq "O" (
+	if /i "%confirm%" NEQ "O" (
 		echo Annulation. Aucune modification n'a été effectuée.
 		echo.
 		pause
@@ -1463,7 +1465,12 @@ goto main_wu
 :wu_net
 	echo.
 	echo %red%Installation de .NET Framework%u%
-	dism.exe /online /enable-feature /featurename:NetFX3 /quiet /norestart 1>nul 2>nul
+	if %build% GEQ 28000 (
+		windows_update\Common\DOTNET\Framework\3_5\DotNet35Setup.exe /quiet /norestart
+		windows_update\Common\DOTNET\Framework\3_5\DotNet35LPSetup.exe /quiet /norestart
+	) else (
+		dism.exe /online /enable-feature /featurename:NetFX3 /quiet /norestart 1>nul 2>nul
+	)
 	if %build% GEQ 19042 (
 		reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.8.1" 1>nul 2>nul
 		if %errorlevel%==1 (
