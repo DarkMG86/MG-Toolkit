@@ -11,7 +11,7 @@ for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=
 if %build% LSS 10240 (
 	goto OSNoOK
 )
-for /f "delims=" %%i in ('powershell -NoProfile -Command "(Get-CimInstance Win32_BIOS).Manufacturer"4) do set BIOS_FABRICANT=%%i
+for /f "delims=" %%i in ('powershell -NoProfile -Command "(Get-CimInstance Win32_BIOS).Manufacturer"') do set BIOS_FABRICANT=%%i
 for /f "delims=" %%i in ('powershell -NoProfile -Command "(Get-CimInstance Win32_BIOS).SMBIOSBIOSVersion"') do set BIOS_VERSION=%%i
 
 
