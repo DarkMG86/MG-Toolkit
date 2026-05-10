@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260219
+set toolkit_version=20260510
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -11,6 +11,8 @@ for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=
 if %build% LSS 10240 (
 	goto OSNoOK
 )
+for /f "delims=" %%i in ('powershell -NoProfile -Command "(Get-CimInstance Win32_BIOS).Manufacturer"4) do set BIOS_FABRICANT=%%i
+for /f "delims=" %%i in ('powershell -NoProfile -Command "(Get-CimInstance Win32_BIOS).SMBIOSBIOSVersion"') do set BIOS_VERSION=%%i
 
 
 
@@ -255,6 +257,8 @@ if "%bitness%"=="EM64T" (
 	echo.
 	echo 	%under%Votre configuration système :%u%
 	echo.
+	echo 	Fabricant :              %BIOS_FABRICANT%
+	echo 	Version du BIOS :        %BIOS_VERSION%
 	echo 	Système d'exploitation : %Caption%
 	echo 	Architecture :           %archi%
 	echo 	Version :                %major%.%minor%.%build%.%revision% [%version_win%]
@@ -749,6 +753,25 @@ goto main
 	echo.
 	echo %red%Modification des informations OEM Windows%u%
 	echo.
+	for /f "tokens=2,*" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Manufacturer 2^>nul') do set "OEM_FABRICANT=%%B"
+	for /f "tokens=2,*" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model 2^>nul') do set "OEM_MODELE=%%B"
+	for /f "tokens=2,*" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v SupportURL 2^>nul') do set "OEM_URL=%%B"
+	echo.
+	echo ===== Informations enregistrées ======
+	echo Fabricant      : %OEM_FABRICANT%
+	echo Modèle         : %OEM_MODELE%
+	echo URL du support : %OEM_URL%
+	echo ======================================
+	echo.
+	set /p confirm=Souhaitez-vous modifier ces informations (O/N) : 
+	echo.
+	if /i "%confirm%" NEQ "O" (
+		echo Annulation. Aucune modification n'a été effectuée.
+		echo.
+		pause
+		goto main
+	)
+	echo.
 	echo.
 	set /p manufacturer=Entrez le nom du fabricant : 
 	set /p model=Entrez le modèle de l'appareil : 
@@ -760,7 +783,7 @@ goto main
 	echo URL du support : %supportURL%
 	echo ======================================
 	echo.
-	set /p confirm=Confirmer ces informations (O/N) :
+	set /p confirm=Confirmer ces informations (O/N) : 
 	echo.
 	if /i "%confirm%" NEQ "O" (
 		echo Annulation. Aucune modification n'a été effectuée.
