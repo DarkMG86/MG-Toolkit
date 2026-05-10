@@ -557,11 +557,9 @@ goto main
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\WOW" /v DefaultSeparateVDM /t REG_SZ /d Yes /f 1>nul 2>nul
 	echo.
 	echo %red%Configuration des fonctionnalités de Windows%u%
-	dism.exe /online /enable-feature /featurename:DirectPlay /all /quiet /norestart 1>nul 2>nul
 	if %build% LSS 28000 (
 		dism.exe /online /enable-feature /featurename:NetFX3 /quiet /norestart 1>nul 2>nul
 	)
-	dism.exe /online /enable-feature /featurename:SMB1Protocol /all /quiet /norestart 1>nul 2>nul
 	echo.
 	echo %red%Configuration des services Windows%u%
 	sc stop RemoteRegistry 1>nul 2>nul
