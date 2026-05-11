@@ -1338,35 +1338,39 @@ goto main
 		pause
 		goto main
 	)
-	for /f %%i in ('dir /B "%~dp0"') do (
-		if exist "%~dp0\*.cab" (
-			echo %red%Installation de %%i%u%
-			dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
-		) else if exist "%~dp0\*.msu" (
-			echo %red%Installation de %%i%u%
-			dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
-		) else if exist "%~dp0\*.exe" (
-			echo %red%Installation de %%i%u%
-			if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
-				"%~dp0\%%i" /ai /gm2
-			) else if "%%i"=="VisualCppRedist_AIO_x86_x64.exe" (
-				"%~dp0\%%i" /ai /gm2
-			) else (
-				"%~dp0\%%i" /quiet /norestart
-			)
-		) else if exist "%~dp0\*.appx" (
-			echo %red%Installation de %%i%u%
-			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
-		) else if exist "%~dp0\*.appxbundle" (
-			echo %red%Installation de %%i%u%
-			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
-		) else if exist "%~dp0\*.msix" (
-			echo %red%Installation de %%i%u%
-			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
-		) else if exist "%~dp0\*.msixbundle" (
-			echo %red%Installation de %%i%u%
-			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
+	for /f "delims=" %%i in ('dir /B "%~dp0\*.cab"') do (
+		echo %red%Installation de %%i%u%
+		dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
+	)
+	for /f "delims=" %%i in ('dir /B "%~dp0\*.msu"') do (
+		echo %red%Installation de %%i%u%
+		dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
+	)
+	for /f "delims=" %%i in ('dir /B "%~dp0\*.exe"') do (
+		echo %red%Installation de %%i%u%
+		if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
+			"%~dp0\%%i" /ai /gm2
+		) else if "%%i"=="VisualCppRedist_AIO_x86_x64.exe" (
+			"%~dp0\%%i" /ai /gm2
+		) else (
+			"%~dp0\%%i" /quiet /norestart
 		)
+	)
+	for /f "delims=" %%i in ('dir /B "%~dp0\*.appx"') do (
+		echo %red%Installation de %%i%u%
+		powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
+	)
+	for /f "delims=" %%i in ('dir /B "%~dp0\*.appxbundle"') do (
+		echo %red%Installation de %%i%u%
+		powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
+	)
+	for /f "delims=" %%i in ('dir /B "%~dp0\*.msix"') do (
+		echo %red%Installation de %%i%u%
+		powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
+	)
+	for /f "delims=" %%i in ('dir /B "%~dp0\*.msixbundle"') do (
+		echo %red%Installation de %%i%u%
+		powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
 	)
 	echo.
 	echo %green%L'installation est terminée%u%
