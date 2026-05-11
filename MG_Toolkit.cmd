@@ -1341,14 +1341,11 @@ goto main
 		if exist "%~dp0\*.cab" (
 			echo %red%Installation de %%i%u%
 			dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
-			echo.
 		) else if exist "%~dp0\*.msu" (
 			echo %red%Installation de %%i%u%
 			dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
-			echo.
 		) else if exist "%~dp0\*.exe" (
 			echo %red%Installation de %%i%u%
-			echo.
 			if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
 				"%~dp0\%%i" /ai /gm2
 			) else if "%%i"=="VisualCppRedist_AIO_x86_x64.exe" (
