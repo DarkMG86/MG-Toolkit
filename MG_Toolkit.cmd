@@ -1322,11 +1322,10 @@ goto main
 	echo.
 	call :titre
 	echo.
-	echo 	%Caption% (%version_win% - %archi%)
+	echo %red%Windows Update%u%
 	echo.
-	echo Le programme va maintenant tenter d'installer les fichiers de mise à jour présents dans le même répertoire.
-	echo Si les fichiers sont incompatibles ou corrompus, l'installation de ces derniers échouera et un message d'erreur s'affichera.
-	echo S'ils sont présents, les packages redistribuables Visual Studio AIO et DirectX d'abbodi1406 seront également installés.
+	echo Le programme va maintenant tenter d'installer les fichiers de mise à jour présents dans le même répertoire. Si les fichiers sont incompatibles ou corrompus, l'installation de ces derniers échouera et un message d'erreur s'affichera. S'ils sont présents, les packages redistribuables Visual Studio AIO et DirectX d'abbodi1406 seront également installés.
+	echo.
 	echo Les extensions reconnues sont : .cab .msu .exe .appx .appxbundle .msix .msixbundle
 	echo.
 	set /p confirm=Souhaitez-vous continuer et procéder à l'installation (O/N) : 
