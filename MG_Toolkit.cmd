@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260511
+set toolkit_version=20260513
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=45
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -1338,7 +1338,9 @@ goto main
 		pause
 		goto main
 	)
+	set found=0
 	if exist "%~dp0\*.cab" (
+		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.cab"') do (
 			echo %yellow%Installation de %%i%u%
 			dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
@@ -1346,6 +1348,7 @@ goto main
 		)
 	)
 	if exist "%~dp0\*.msu" (
+		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.msu"') do (
 		echo %yellow%Installation de %%i%u%
 		dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
@@ -1353,6 +1356,7 @@ goto main
 		)
 	)
 	if exist "%~dp0\*.exe" (
+		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.exe"') do (
 			echo %yellow%Installation de %%i%u%
 			if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
@@ -1366,6 +1370,7 @@ goto main
 		)
 	)
 	if exist "%~dp0\*.appx" (
+		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.appx"') do (
 			echo %yellow%Installation de %%i%u%
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
@@ -1373,6 +1378,7 @@ goto main
 		)
 	)
 	if exist "%~dp0\*.appxbundle" (
+		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.appxbundle"') do (
 			echo %yellow%Installation de %%i%u%
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
@@ -1380,6 +1386,7 @@ goto main
 		)
 	)
 	if exist "%~dp0\*.msix" (
+		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.msix"') do (
 			echo %yellow%Installation de %%i%u%
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
@@ -1387,11 +1394,18 @@ goto main
 		)
 	)
 	if exist "%~dp0\*.msixbundle" (
+		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.msixbundle"') do (
 			echo %yellow%Installation de %%i%u%
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
 			echo.
 		)
+	)
+	if %found%==0 (
+		echo Aucune mise à jour trouvée dans le dossier actuel.
+		echo.
+		pause
+		goto main
 	)
 	echo %green%L'installation est terminée%u%
 	echo.
