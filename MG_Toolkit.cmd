@@ -3,9 +3,9 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260513
+set toolkit_version=20260514
 title MG Toolkit (v%toolkit_version%)
-mode con cols=90 lines=45
+mode con cols=90 lines=40
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
 for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=%%h& set build=%%i& set revision=%%j)
 if %build% LSS 10240 (
@@ -1342,23 +1342,21 @@ goto main
 	if exist "%~dp0\*.cab" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.cab"') do (
-			echo %yellow%Installation de %%i%u%
+			echo Installation de %%i
 			dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
-			echo.
 		)
 	)
 	if exist "%~dp0\*.msu" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.msu"') do (
-		echo %yellow%Installation de %%i%u%
-		dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
-		echo.
+			echo Installation de %%i
+			dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
 		)
 	)
 	if exist "%~dp0\*.exe" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.exe"') do (
-			echo %yellow%Installation de %%i%u%
+			echo Installation de %%i
 			if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
 				"%~dp0\%%i" /ai /gm2
 			) else if "%%i"=="VisualCppRedist_AIO_x86_x64.exe" (
@@ -1366,39 +1364,34 @@ goto main
 			) else (
 				"%~dp0\%%i" /quiet /norestart
 			)
-			echo.
 		)
 	)
 	if exist "%~dp0\*.appx" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.appx"') do (
-			echo %yellow%Installation de %%i%u%
+			echo Installation de %%i
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
-			echo.
 		)
 	)
 	if exist "%~dp0\*.appxbundle" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.appxbundle"') do (
-			echo %yellow%Installation de %%i%u%
+			echo Installation de %%i
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
-			echo.
 		)
 	)
 	if exist "%~dp0\*.msix" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.msix"') do (
-			echo %yellow%Installation de %%i%u%
+			echo Installation de %%i
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
-			echo.
 		)
 	)
 	if exist "%~dp0\*.msixbundle" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.msixbundle"') do (
-			echo %yellow%Installation de %%i%u%
+			echo Installation de %%i
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
-			echo.
 		)
 	)
 	if %found%==0 (
