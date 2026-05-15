@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260514
+set toolkit_version=20260515
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -40,7 +40,6 @@ set pink=[95m
 set purple=[35m
 set white=[37m
 set yellow=[33m
-
 
 
 :: Vérification de la présence d'une mise à jour
@@ -269,22 +268,22 @@ if "%bitness%"=="EM64T" (
 
 :OSNoOK
 	echo.
-    echo __________________________________________________________________________________________
+	echo __________________________________________________________________________________________
 	echo.
 	echo                    Votre OS n'est pas compatible (minimum Windows 10)
 	echo                         Le programme va maintenant se fermer
-    echo __________________________________________________________________________________________
+	echo __________________________________________________________________________________________
 	echo.
 	pause
 exit
 
 :OSOK
 	echo.
-    echo __________________________________________________________________________________________
+	echo __________________________________________________________________________________________
 	echo.
 	echo %green%                               Votre système est compatible%u%
 	echo %green%       !!! Il est recommandé de désactiver votre antivirus avant de poursuivre !!!%u%
-    echo __________________________________________________________________________________________
+	echo __________________________________________________________________________________________
 	echo.
 	pause
 goto main
@@ -321,7 +320,7 @@ goto main
 	echo.
 	echo 	20. Logithèque en ligne			21. Télécharger packages Windows Update
 	echo.
-    echo __________________________________________________________________________________________
+	echo __________________________________________________________________________________________
 	echo.
 	set /p choix=Sélectionnez l'opération à effectuer (0 pour quitter): 
 	if /i "%choix%"=="1" (goto activation_mas)
@@ -563,19 +562,11 @@ goto main
 	echo.
 	echo %red%Configuration des services Windows%u%
 	sc stop RemoteRegistry 1>nul 2>nul
-	sc config RemoteRegistry start=Disabled 1>nul 2>nul
+	sc config RemoteRegistry start= Disabled 1>nul 2>nul
 	sc stop VSS 1>nul 2>nul
-	sc config VSS start=Disabled 1>nul 2>nul
+	sc config VSS start= Disabled 1>nul 2>nul
 	sc stop WerSvc 1>nul 2>nul
-	sc config WerSvc start=Disabled 1>nul 2>nul
-	powershell -command "Get-PhysicalDisk | select MediaType" | find /i "SD" 1>nul
-	if %errorlevel%==0 (
-		sc stop WSearch 1>nul 2>nul
-		sc config WSearch start=Auto 1>nul 2>nul
-	) else (
-		sc stop WSearch 1>nul 2>nul
-		sc config WSearch start=Disabled 1>nul 2>nul
-	)
+	sc config WerSvc start= Disabled 1>nul 2>nul
 	echo.
 	echo %red%Configuration du nettoyage de disque Windows%u%
 	cleanmgr /sageset:1
@@ -592,12 +583,17 @@ goto main
 		reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnableBoottrace /t REG_DWORD /d 0 /f 1>nul 2>nul
 		reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f 1>nul 2>nul
 		reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnableSuperfetch /t REG_DWORD /d 0 /f 1>nul 2>nul
-		sc stop "Superfetch" 1>nul 2>nul
-		sc config "Superfetch" start=Disabled 1>nul 2>nul
-		sc stop "SysMain" 1>nul 2>nul
-		sc config "SysMain" start=Disabled 1>nul 2>nul
+		sc stop Superfetch 1>nul 2>nul
+		sc config Superfetch start= Disabled 1>nul 2>nul
+		sc stop SysMain 1>nul 2>nul
+		sc config SysMain start= Disabled 1>nul 2>nul
+		sc stop WSearch 1>nul 2>nul
+		sc config WSearch start= Auto 1>nul 2>nul
 		schtasks /Delete /F /TN "Microsoft\Windows\Defrag\ScheduledDefrag" 1>nul 2>nul
 		echo.
+	) else (
+		sc stop WSearch 1>nul 2>nul
+		sc config WSearch start= Disabled 1>nul 2>nul
 	)
 	echo %green%Optimisation terminée%u%
 	echo.
@@ -617,10 +613,10 @@ goto main
 	sc stop diagnosticshub.standardcollector.service 1>nul 2>nul
 	sc stop dmwappushservice 1>nul 2>nul
 	sc stop WMPNetworkSvc 1>nul 2>nul
-	sc config DiagTrack start=Disabled 1>nul 2>nul
-	sc config diagnosticshub.standardcollector.service start=Disabled 1>nul 2>nul
-	sc config dmwappushservice start=Disabled 1>nul 2>nul
-	sc config WMPNetworkSvc start=Disabled 1>nul 2>nul
+	sc config DiagTrack start= Disabled 1>nul 2>nul
+	sc config diagnosticshub.standardcollector.service start= Disabled 1>nul 2>nul
+	sc config dmwappushservice start= Disabled 1>nul 2>nul
+	sc config WMPNetworkSvc start= Disabled 1>nul 2>nul
 	echo.
 	echo %red%Désactivation des tâches planifiées%u%
 	schtasks /Change /DISABLE /TN "Microsoft\Windows\SetupSQMTask" 1>nul 2>nul
@@ -702,7 +698,7 @@ goto main
 	del /f /q /s %ProgramData%\Microsoft\Diagnosis\ETLLogs\* 1>nul 2>nul
 	::NVIDIA
 	sc stop NvTelemetryContainer 1>nul 2>nul
-	sc config NvTelemetryContainer start=Disabled 1>nul 2>nul
+	sc config NvTelemetryContainer start= Disabled 1>nul 2>nul
 	for /f "tokens=1 delims=," %%t in ('schtasks /Query /FO CSV ^| find /v "TaskName" ^| find "NvTmMon"') do schtasks /Change /DISABLE /TN "%%~t" 1>nul 2>nul
 	for /f "tokens=1 delims=," %%t in ('schtasks /Query /FO CSV ^| find /v "TaskName" ^| find "NvTmRep"') do schtasks /Change /DISABLE /TN "%%~t" 1>nul 2>nul
 	for /f "tokens=1 delims=," %%t in ('schtasks /Query /FO CSV ^| find /v "TaskName" ^| find "NvTmRepOnLogon"') do schtasks /Change /DISABLE /TN "%%~t" 1>nul 2>nul
@@ -1148,7 +1144,7 @@ goto main
 	echo.
 	echo %red%Réparation de Windows Installer%u%
 	net stop msiserver 1>nul 2>nul
-	sc config msiserver start=Demand 1>nul 2>nul
+	sc config msiserver start= Demand 1>nul 2>nul
 	msiexec /unregister 1>nul 2>nul
 	msiexec /regserver 1>nul 2>nul
 	regsvr32.exe /s %SYSTEMROOT%\System32\msi.dll 1>nul 2>nul
@@ -1295,11 +1291,11 @@ goto main
 	sc.exe sdset wuauserv D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCRRC;;;AU)(A;;CCLCSWRPWPDTLOCRRC;;;PU) 1>nul 2>nul
 	echo.
 	echo %red%Configuration du démarrage des services%u%
-	sc config wuauserv start=auto 1>nul 2>nul
-	sc config bits start=delayed-auto 1>nul 2>nul
-	sc config cryptsvc start=auto 1>nul 2>nul
-	sc config TrustedInstaller start=demand 1>nul 2>nul
-	sc config DcomLaunch start=auto 1>nul 2>nul
+	sc config wuauserv start= auto 1>nul 2>nul
+	sc config bits start= delayed-auto 1>nul 2>nul
+	sc config cryptsvc start= auto 1>nul 2>nul
+	sc config TrustedInstaller start= demand 1>nul 2>nul
+	sc config DcomLaunch start= auto 1>nul 2>nul
 	echo.
 	echo %red%Redémarrage des services Windows Update%u%
 	net start bits 1>nul 2>nul
@@ -1330,6 +1326,8 @@ goto main
 	echo.
 	echo Les extensions reconnues sont : .cab .msu .exe .appx .appxbundle .msix .msixbundle
 	echo.
+	echo __________________________________________________________________________________________
+	echo.
 	set /p confirm=Souhaitez-vous continuer et procéder à l'installation (O/N) : 
 	echo.
 	if /i "%confirm%" NEQ "O" (
@@ -1338,25 +1336,40 @@ goto main
 		pause
 		goto main
 	)
+	setlocal EnableDelayedExpansion
 	set found=0
 	if exist "%~dp0\*.cab" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.cab"') do (
-			echo Installation de %%i
-			dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
+			<nul set /p=Installation de %%i... 
+			dism /online /add-package /packagepath:"%~dp0\%%i" /quiet /norestart 1>nul 2>nul
+			if !errorlevel! EQU 0 (
+				echo OK
+			) else if !errorlevel! EQU 3010 (
+				echo OK - redémarrage requis
+			) else (
+				echo Erreur
+			)
 		)
 	)
 	if exist "%~dp0\*.msu" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.msu"') do (
-			echo Installation de %%i
-			dism /online /add-package /packagepath:"%~dp0\%%i" /norestart
+			<nul set /p=Installation de %%i... 
+			dism /online /add-package /packagepath:"%~dp0\%%i" /quiet /norestart 1>nul 2>nul
+			if !errorlevel! EQU 0 (
+				echo OK
+			) else if !errorlevel! EQU 3010 (
+				echo OK - redémarrage requis
+			) else (
+				echo Erreur
+			)
 		)
 	)
 	if exist "%~dp0\*.exe" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.exe"') do (
-			echo Installation de %%i
+			<nul set /p=Installation de %%i... 
 			if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
 				"%~dp0\%%i" /ai /gm2
 			) else if "%%i"=="VisualCppRedist_AIO_x86_x64.exe" (
@@ -1364,35 +1377,44 @@ goto main
 			) else (
 				"%~dp0\%%i" /quiet /norestart
 			)
+			if !errorlevel! EQU 0 (
+				echo OK
+			) else (
+				echo Erreur
+			)
 		)
 	)
 	if exist "%~dp0\*.appx" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.appx"') do (
-			echo Installation de %%i
+			<nul set /p=Installation de %%i... 
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
 		)
+		echo OK
 	)
 	if exist "%~dp0\*.appxbundle" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.appxbundle"') do (
-			echo Installation de %%i
+			<nul set /p=Installation de %%i... 
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
 		)
+		echo OK
 	)
 	if exist "%~dp0\*.msix" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.msix"') do (
-			echo Installation de %%i
+			<nul set /p=Installation de %%i... 
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
 		)
+		echo OK
 	)
 	if exist "%~dp0\*.msixbundle" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.msixbundle"') do (
-			echo Installation de %%i
+			<nul set /p=Installation de %%i... 
 			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
 		)
+		echo OK
 	)
 	if %found%==0 (
 		echo Aucune mise à jour trouvée dans le dossier actuel.
@@ -1400,6 +1422,8 @@ goto main
 		pause
 		goto main
 	)
+	Endlocal
+	echo.
 	echo %green%L'installation est terminée%u%
 	echo.
 	call :callforrestart
