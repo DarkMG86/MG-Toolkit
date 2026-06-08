@@ -938,8 +938,8 @@ goto main
 	echo.
 	echo %red%Nettoyage du cache Windows Installer%u%
 	echo.
-	set installerDir="%WINDIR%\Installer"
-	set logFile="%~dp0\Orphelins_MSI_MSP.log"
+	set "installerDir=%WINDIR%\Installer"
+	set "logFile=%~dp0\Orphelins_MSI_MSP.log"
 	set orphans_found=0
 	echo Suppression des dossiers vides dans %installerDir%
 	for /d /r "%installerDir%" %%d in (*) do (
