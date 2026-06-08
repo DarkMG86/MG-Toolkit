@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260515
+set toolkit_version=20260608
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -314,11 +314,9 @@ goto main
 	echo 	11. Réparation apps Windows		17. Réparation Windows Installer
 	echo 	12. Réparation cache d'icônes		18. Réparation Windows Update
 	echo.
-	echo 				  19. Windows Update
-	echo.
 	echo   %gray%%under%Divers%u%
 	echo.
-	echo 	20. Logithèque en ligne			21. Télécharger packages Windows Update
+	echo 	19. Installer des mises à jour		20. Télécharger des mises à jour Windows
 	echo.
 	echo __________________________________________________________________________________________
 	echo.
@@ -342,8 +340,7 @@ goto main
 	if /i "%choix%"=="17" (goto reparation_win_intaller)
 	if /i "%choix%"=="18" (goto reparation_wu)
 	if /i "%choix%"=="19" (goto Windows_update)
-	if /i "%choix%"=="20" (start https://1drv.ms/f/c/011dbcd351618514/EhSFYVHTvB0ggAHe-gMAAAABVx8HKWQvEjg8qcNBmAesMg)
-	if /i "%choix%"=="21" (start https://1drv.ms/f/c/011dbcd351618514/EhSFYVHTvB0ggAG56gMAAAABzpb74buvreHFXUhLGtM1Ow)
+	if /i "%choix%"=="20" (start https://1drv.ms/f/c/011dbcd351618514/EhSFYVHTvB0ggAG56gMAAAABzpb74buvreHFXUhLGtM1Ow)
 	if /i "%choix%"=="0" (exit)
 goto main
 
