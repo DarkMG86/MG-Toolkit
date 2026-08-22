@@ -1,9 +1,9 @@
-:: Paramétrage du script
+:: Paramétrage du script et vérification de la compatibilité
 @echo off
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260608
+set toolkit_version=20260822
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -73,161 +73,7 @@ if exist "%TEMP%\version.txt" (
 
 
 
-:: Test de la version de Windows utilisée
-:TestOS
-	set build_win=""
-	set version_win=""
-	ver | find /i "version 10.0.10240" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.10240
-		set version_win=1507
-	)
-	ver | find /i "version 10.0.10586" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.10586
-		set version_win=1511
-	)
-	ver | find /i "version 10.0.14393" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.14393
-		set version_win=1607
-	)
-	ver | find /i "version 10.0.15063" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.15063
-		set version_win=1703
-	)
-	ver | find /i "version 10.0.16299" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.16299
-		set version_win=1709
-	)
-	ver | find /i "version 10.0.17134" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.17134
-		set version_win=1803
-	)
-	ver | find /i "version 10.0.17763" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.17763
-		set version_win=1809
-	)
-	ver | find /i "version 10.0.18362" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.18362
-		set version_win=1903
-	)
-	ver | find /i "version 10.0.18363" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.18362
-		set version_win=1909
-	)
-	ver | find /i "version 10.0.19041" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.19041
-		set version_win=2004
-	)
-	ver | find /i "version 10.0.19042" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.19041
-		set version_win=20H2
-	)
-	ver | find /i "version 10.0.19043" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.19041
-		set version_win=21H1
-	)
-	ver | find /i "version 10.0.19044" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.19041
-		set version_win=21H2
-	)
-	ver | find /i "version 10.0.19045" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.19041
-		set version_win=22H2
-	)
-	ver | find /i "version 10.0.20348" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.20348
-		set version_win=21H2
-	)
-	ver | find /i "version 10.0.20349" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.20348
-		set version_win=22H2
-	)
-	ver | find /i "version 10.0.22000" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.22000
-		set version_win=21H2
-	)
-	ver | find /i "version 10.0.22621" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.22621
-		set version_win=22H2
-	)
-	ver | find /i "version 10.0.22622" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.22621
-		set version_win=22H2
-	)
-	ver | find /i "version 10.0.22623" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.22621
-		set version_win=22H2
-	)
-	ver | find /i "version 10.0.22624" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.22621
-		set version_win=22H2
-	)
-	ver | find /i "version 10.0.22631" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.22621
-		set version_win=23H2
-	)
-	ver | find /i "version 10.0.22635" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.22621
-		set version_win=23H2
-	)
-	ver | find /i "version 10.0.26100" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.26100
-		set version_win=24H2
-	)
-	ver | find /i "version 10.0.26120" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.26100
-		set version_win=24H2
-	)
-	ver | find /i "version 10.0.26200" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.26100
-		set version_win=25H2
-	)
-	ver | find /i "version 10.0.26220" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.26100
-		set version_win=25H2
-	)
-	ver | find /i "version 10.0.26300" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.26100
-		set version_win=26H2
-	)
-	ver | find /i "version 10.0.28000" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.28000
-		set version_win=26H1
-	)
-	ver | find /i "version 10.0.28020" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=10.0.28000
-		set version_win=26H1
-	)
-
+:: Controle de la version de Windows utilisée
 for /f "tokens=3 usebackq" %%a in (`reg query "HKLM\System\CurrentControlSet\Control\Session Manager\Environment" /v PROCESSOR_ARCHITECTURE`) do set "bitness=%%a"
 if "%bitness%"=="x86" (
 	set archi=x86
@@ -260,7 +106,7 @@ if "%bitness%"=="EM64T" (
 	echo 	Version du BIOS :        %BIOS_VERSION%
 	echo 	Système d'exploitation : %Caption%
 	echo 	Architecture :           %archi%
-	echo 	Version :                %major%.%minor%.%build%.%revision% [%version_win%]
+	echo 	Version :                %major%.%minor%.%build%.%revision%
 	for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLabEx" 2^>nul') do (
 		echo 	Build :                  %%b
 	)
@@ -307,10 +153,10 @@ goto main
 	echo.
 	echo   %gray%%under%Utilitaires de maintenance%u%
 	echo.
-	echo 	7.  Défragmentation système		13. Réparation référentiel WMI
+	echo 	7.  Défragmentation système		 %red%/!\%u%	13. Réparation référentiel WMI
 	echo 	8.  Nettoyage système			14. Réparation réseau
 	echo 	9.  Nettoyage système complet    %red%/!\%u%	15. Réparation réseau complète
-	echo 	10. Nettoyage Windows Installer  %red%/!\%u%	16. Réparation système Windows
+	echo 	%red%/!\%u%10. Nettoyage Windows Installer  %red%/!\%u%	16. Réparation système Windows
 	echo 	11. Réparation apps Windows		17. Réparation Windows Installer
 	echo 	12. Réparation cache d'icônes		18. Réparation Windows Update
 	echo.
