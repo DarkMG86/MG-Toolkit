@@ -1,4 +1,6 @@
-# MG Toolkit (English below)
+# MG Toolkit
+
+## (English below)
 
 Il s'agit d'un script batch autonome avec plusieurs fonctionnalités visant à maintenir un PC équipé d'au moins Windows 10.
 
@@ -9,6 +11,7 @@ Il s'agit d'un script batch autonome avec plusieurs fonctionnalités visant à m
 
 > [!WARNING]
 > Ce programme est réalisé pendant mon temps libre, il est donc fourni tel quel et sans garantie !
+
 
 
 ## English
