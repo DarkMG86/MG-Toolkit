@@ -153,10 +153,10 @@ goto main
 	echo.
 	echo   %gray%%under%Utilitaires de maintenance%u%
 	echo.
-	echo 	7.  Défragmentation système		 %red%/!\%u%	13. Réparation référentiel WMI
+	echo 	7.  Défragmentation système		13. Réparation référentiel WMI %red%/!\%u%
 	echo 	8.  Nettoyage système			14. Réparation réseau
-	echo 	9.  Nettoyage système complet    %red%/!\%u%	15. Réparation réseau complète
-	echo 	%red%/!\%u%10. Nettoyage Windows Installer  %red%/!\%u%	16. Réparation système Windows
+	echo 	9.  Nettoyage système complet %red%/!\%u%	15. Réparation réseau complète
+	echo 	10. Nettoyage Windows Installer %red%/!\%u%	16. Réparation système Windows
 	echo 	11. Réparation apps Windows		17. Réparation Windows Installer
 	echo 	12. Réparation cache d'icônes		18. Réparation Windows Update
 	echo.
