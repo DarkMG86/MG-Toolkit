@@ -187,7 +187,7 @@ goto main
 	if /i "%choix%"=="17" (goto reparation_win_intaller)
 	if /i "%choix%"=="18" (goto reparation_wu)
 	if /i "%choix%"=="19" (goto Windows_update)
-	if /i "%choix%"=="20" (start https://1drv.ms/f/c/011dbcd351618514/IgAUhWFR07wdIIAB3voDAAAAARJzP6kTge4FzIPDB7E0PLg)
+	if /i "%choix%"=="20" (start https://1drv.ms/f/c/011dbcd351618514/IgAUhWFR07wdIIAB3voDAAAAAcBLZB30-366q14Z-fKgndE)
 	if /i "%choix%"=="0" (exit)
 goto main
 
