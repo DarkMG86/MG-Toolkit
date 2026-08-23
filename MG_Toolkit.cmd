@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260822
+set toolkit_version=20260823
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -40,6 +40,7 @@ set pink=[95m
 set purple=[35m
 set white=[37m
 set yellow=[33m
+
 
 
 :: Vérification de la présence d'une mise à jour
@@ -162,7 +163,7 @@ goto main
 	echo.
 	echo   %gray%%under%Divers%u%
 	echo.
-	echo 	19. Installer des mises à jour		20. Télécharger des mises à jour Windows
+	echo 	19. Installer des mises à jour		20. Logithèque en ligne
 	echo.
 	echo __________________________________________________________________________________________
 	echo.
@@ -186,7 +187,7 @@ goto main
 	if /i "%choix%"=="17" (goto reparation_win_intaller)
 	if /i "%choix%"=="18" (goto reparation_wu)
 	if /i "%choix%"=="19" (goto Windows_update)
-	if /i "%choix%"=="20" (start https://1drv.ms/f/c/011dbcd351618514/EhSFYVHTvB0ggAG56gMAAAABzpb74buvreHFXUhLGtM1Ow)
+	if /i "%choix%"=="20" (start https://1drv.ms/f/c/011dbcd351618514/IgAUhWFR07wdIIAB3voDAAAAARJzP6kTge4FzIPDB7E0PLg)
 	if /i "%choix%"=="0" (exit)
 goto main
 
