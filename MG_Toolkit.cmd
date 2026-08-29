@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260823
+set toolkit_version=20260829
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -970,8 +970,10 @@ goto main
 	echo %red%Réparation de Windows (SFC)%u%
 	sfc -scannow
 	echo.
-	echo %red%Analyse du système de fichiers Windows (CHKDSK)%u%
-	fsutil dirty set %SYSTEMDRIVE%
+	set /p confirm=Souhaitez-vous analyser le système de fichiers au redémarrage (CHKDSK) ? [O/N] :
+	if /i "%confirm%" EQU "O" (
+		fsutil dirty set %SYSTEMDRIVE%
+	)
 	echo.
 	echo %green%Votre ordinateur doit redémarrer pour terminer le processus de réparation%u%
 	echo.
