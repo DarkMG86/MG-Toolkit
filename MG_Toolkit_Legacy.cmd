@@ -103,6 +103,7 @@ exit
 	echo.
 	echo                                Votre systeme est compatible
 	echo        !!! Il est recommande de desactiver votre antivirus avant de poursuivre !!!
+	echo %V%
 	echo __________________________________________________________________________________________
 	echo.
 	pause
@@ -278,7 +279,7 @@ goto main
 		schtasks /Delete /F /TN "Microsoft\Windows\Defrag\ScheduledDefrag" 1>nul 2>nul
 		echo.
 	)
-	Optimisation terminee
+	echo Optimisation terminee
 	echo.
 	call :callforrestart
 goto main_configuration
