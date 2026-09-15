@@ -147,13 +147,11 @@ goto main
 
 
 
-
 :: Titre
 :titre
-	echo 			=============================================
-	echo 			^|^|         MG Toolkit  (v%toolkit_version%)         ^|^|
-	echo 			=============================================
-	echo.
+	echo 			     ==============================
+	echo 			     ^|^|  MG Toolkit (v%toolkit_version%)  ^|^|
+	echo 			     ==============================
 goto :eof
 
 
