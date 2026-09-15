@@ -103,7 +103,6 @@ exit
 	echo.
 	echo                                Votre systeme est compatible
 	echo        !!! Il est recommande de desactiver votre antivirus avant de poursuivre !!!
-	echo %V%
 	echo __________________________________________________________________________________________
 	echo.
 	pause
@@ -117,43 +116,113 @@ goto main
 	echo.
 	call :titre
 	echo.
+	echo   Activation de Windows / Office
+	echo.
+	echo 	1.  Activation (MAS)
+	echo 	2.  Status d'activation
+	echo.
 	echo   Utilitaires de configuration et maintenance
 	echo.
-	echo 	1.  Configuration performances		2.  Configuration vie privee
-	echo 	3.  Modification informations OEM
+	echo 	3.  Configuration performances
+	echo 	4.  Configuration vie privee
+	echo 	5.  Modification informations OEM
 	echo.
 	echo   Utilitaires de maintenance
 	echo.
-	echo 	7.  Defragmentation systeme		13. Reparation referentiel WMI /!\
-	echo 	8.  Nettoyage systeme			14. Reparation reseau
-	echo 	9.  Nettoyage systeme complet /!\	15. Reparation reseau complete
-	echo 	10. Nettoyage Windows Installer /!\	16. Reparation systeme Windows
-	echo 	11. Reparation apps Windows		17. Reparation Windows Installer
-	echo 	12. Reparation cache d'icônes		18. Reparation Windows Update
+	echo 	6.  Defragmentation systeme
+	echo 	7.  Nettoyage systeme
+	echo 	8.  Reparation reseau
+	echo 	9.  Reparation systeme Windows
 	echo.
 	echo   Divers
 	echo.
-	echo 	19. Installer des mises a jour		20. Logitheque en ligne
+	echo 	10. Installer des mises a jour
+	echo 	11. Logitheque en ligne
 	echo.
 	echo __________________________________________________________________________________________
 	echo.
 	set /p choix=Selectionnez l'operation a effectuer (0 pour quitter): 
-	if /i "%choix%"=="1" (goto configuration_performances)
-	if /i "%choix%"=="2" (goto configuration_privacy)
-	if /i "%choix%"=="3" (goto oem_information)
-	if /i "%choix%"=="7" (goto defrag)
-	if /i "%choix%"=="8" (goto nettoyage_basique)
-	if /i "%choix%"=="10" (goto nettoyage_windows_installer)
-	if /i "%choix%"=="12" (goto reparation_icones)
-	if /i "%choix%"=="13" (goto reparation_wmi)
-	if /i "%choix%"=="14" (goto reparation_reseau_basique)
-	if /i "%choix%"=="15" (goto reparation_reseau_complet)
-	if /i "%choix%"=="16" (goto reparation_win)
-	if /i "%choix%"=="17" (goto reparation_win_intaller)
-	if /i "%choix%"=="18" (goto reparation_wu)
-	if /i "%choix%"=="19" (goto Windows_update)
-	if /i "%choix%"=="20" (start https://1drv.ms/f/c/011dbcd351618514/IgAUhWFR07wdIIAB3voDAAAAAcBLZB30-366q14Z-fKgndE)
+	if /i "%choix%"=="1" (
+		ver | find /i "version 5" 1>nul
+		if %errorlevel%==0 (
+			goto activation_mas
+		) else (
+			echo Cette fonctionnalite n'est pas compatible avec Windows XP !
+			pause
+			goto main
+		)
+	)
+	if /i "%choix%"=="2" (goto activation_status)
+	if /i "%choix%"=="3" (goto configuration_performances)
+	if /i "%choix%"=="4" (
+		ver | find /i "version 5" 1>nul
+		if %errorlevel%==0 (
+			goto configuration_privacy
+		) else (
+			echo Cette fonctionnalite n'est pas compatible avec Windows XP !
+			pause
+			goto main
+		)
+	)
+	if /i "%choix%"=="5" (
+		ver | find /i "version 5" 1>nul
+		if %errorlevel%==0 (
+			goto oem_information
+		) else (
+			echo Cette fonctionnalite n'est pas compatible avec Windows XP !
+			pause
+			goto main
+		)
+	)
+	if /i "%choix%"=="6" (goto defrag)
+	if /i "%choix%"=="7" (goto nettoyage)
+	if /i "%choix%"=="8" (goto reparation_reseau)
+	if /i "%choix%"=="9" (goto reparation_win)
+	if /i "%choix%"=="10" (goto windows_update)
+	if /i "%choix%"=="11" (start https://1drv.ms/f/c/011dbcd351618514/IgAUhWFR07wdIIAB3voDAAAAAcBLZB30-366q14Z-fKgndE)
 	if /i "%choix%"=="0" (exit)
+goto main
+
+
+
+:: Activation de Windows / Office
+:activation_mas
+	cls
+	echo.
+	call :titre
+	echo.
+	echo Activation de Windows - Office (MAS)
+	echo.
+	echo IMPORTANT :
+	echo Une connexion Internet est requise.
+	echo Il est necessaire de desactiver votre antivirus avant de poursuivre !
+	echo.
+	pause
+	powershell -Command "(irm https://get.activated.win | iex)" 1>nul 2>nul
+goto main
+
+
+
+:: Status de l'activation de Windows
+:activation_status
+	cls
+	echo.
+	call :titre
+	echo.
+	call :ColorText 0c "Status de l'activation de Windows"
+	ver | find /i "version 5" 1>nul
+	if %errorlevel%==0 (
+		%SYSTEMROOT%\system32\oobe\msoobe /a
+		echo.
+		pause
+	) else (
+		echo.
+		ver
+		cscript //nologo %SYSTEMROOT%\system32\slmgr.vbs /dli
+		cscript //nologo %SYSTEMROOT%\system32\slmgr.vbs /xpr
+		echo.
+		pause
+	)
 goto main
 
 
@@ -481,11 +550,207 @@ goto main
 
 
 
+:: Defragmentation de Windows
+:defrag
+	cls
+	echo.
+	call :titre
+	echo.
+	echo Defragmentation de Windows
+	echo.
+	defrag /u /v %SYSTEMDRIVE%
+	echo.
+	echo La defragmentation est terminee
+	echo.
+	pause
+goto main
+
+
+
+:: Nettoyage de disque Windows
+:nettoyage
+	cls
+	echo.
+	call :titre
+	echo.
+	echo Nettoyage des fichiers temporaires
+	del "%LOCALAPPDATA%\Microsoft\Windows\WebCache" /f /q /s 1>nul 2>nul
+	del "%SYSTEMROOT%\Temp\*" /f /q /s 1>nul 2>nul
+	del "%TEMP%\*" /f /q /s 1>nul 2>nul
+	echo.
+	echo Nettoyage de Windows Update
+	net stop wuauserv 1>nul 2>nul
+	rd "%SYSTEMROOT%\SoftwareDistribution" /q /s 1>nul 2>nul
+	net start wuauserv 1>nul 2>nul
+	echo.
+	echo Nettoyage de disque Windows
+	cleanmgr /sagerun:1 1>nul 2>nul
+	echo.
+	echo Le nettoyage est termine
+	echo.
+	call :callforrestart
+goto main
+
+
+
+:: Reparation du reseau Windows
+:reparation_reseau
+	cls
+	echo.
+	call :titre
+	echo.
+	echo Reparation basique du reseau Windows
+	netsh int ip reset 1>nul 2>nul
+	netsh winsock reset 1>nul 2>nul
+	ipconfig /release 1>nul 2>nul
+	ipconfig /renew 1>nul 2>nul
+	ipconfig /flushdns 1>nul 2>nul
+	echo.
+	echo La reparation est terminee
+	echo.
+	call :callforrestart
+goto main
+
+
+
+:: Reparation du systeme de fichiers Windows
+:reparation_win
+	cls
+	echo.
+	call :titre
+	echo.
+	if exist "%SYSTEMROOT%\System32\dism.exe" (
+		ver | find /i "version 6.1" 1>nul
+		if %errorlevel%==1 (
+			echo Reparation de l'image systeme Windows (DISM)
+			dism /online /cleanup-image /restorehealth
+			echo.
+		)
+	)
+	echo Reparation de Windows (SFC)
+	sfc -scannow
+	echo.
+	echo Analyse du systeme de fichiers Windows (CHKDSK)
+	set /p confirm=Souhaitez-vous analyser le systeme de fichiers au redemarrage ? [O/N] :
+	if /i "%confirm%" EQU "O" (
+		fsutil dirty set %SYSTEMDRIVE%
+	)
+	echo.
+	echo Votre ordinateur doit redemarrer pour terminer le processus de reparation
+	echo.
+	call :callforrestart
+goto main
+
+
+
+:: Windows Update
+:windows_update
+	cls
+	echo.
+	call :titre
+	echo.
+	echo Windows Update
+	echo.
+	echo Le programme va maintenant installer les mises a jour presentes dans le dossier actuel.
+	echo En cas d'erreur ou d'incompatibilite, un message s'affichera.
+	echo Les packages VC++ AIO et DirectX d'abbodi1406 seront egalement installes si present.
+	echo.
+	echo Les extensions reconnues sont : .cab .msu .exe .appx .appxbundle
+	echo.
+	echo __________________________________________________________________________________________
+	echo.
+	set /p confirm=Souhaitez-vous continuer et proceder a l'installation (O/N) : 
+	echo.
+	if /i "%confirm%" NEQ "O" (
+		echo Annulation. Aucune modification n'a ete effectuee.
+		echo.
+		pause
+		goto main
+	)
+	setlocal EnableDelayedExpansion
+	set found=0
+	if exist "%~dp0\*.cab" (
+		set found=1
+		for /f "delims=" %%i in ('dir /B "%~dp0\*.cab"') do (
+			<nul set /p=Installation de %%i... 
+			dism /online /add-package /packagepath:"%~dp0\%%i" /quiet /norestart 1>nul 2>nul
+			if !errorlevel! EQU 0 (
+				echo OK
+			) else if !errorlevel! EQU 3010 (
+				echo OK - redemarrage requis
+			) else (
+				echo Erreur
+			)
+		)
+	)
+	if exist "%~dp0\*.msu" (
+		set found=1
+		for /f "delims=" %%i in ('dir /B "%~dp0\*.msu"') do (
+			<nul set /p=Installation de %%i... 
+			dism /online /add-package /packagepath:"%~dp0\%%i" /quiet /norestart 1>nul 2>nul
+			if !errorlevel! EQU 0 (
+				echo OK
+			) else if !errorlevel! EQU 3010 (
+				echo OK - redemarrage requis
+			) else (
+				echo Erreur
+			)
+		)
+	)
+	if exist "%~dp0\*.exe" (
+		set found=1
+		for /f "delims=" %%i in ('dir /B "%~dp0\*.exe"') do (
+			<nul set /p=Installation de %%i... 
+			if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
+				"%~dp0\%%i" /ai /gm2
+			) else if "%%i"=="VisualCppRedist_AIO_x86_x64.exe" (
+				"%~dp0\%%i" /ai /gm2
+			) else (
+				"%~dp0\%%i" /quiet /norestart
+			)
+			if !errorlevel! EQU 0 (
+				echo OK
+			) else (
+				echo Erreur
+			)
+		)
+	)
+	if exist "%~dp0\*.appx" (
+		set found=1
+		for /f "delims=" %%i in ('dir /B "%~dp0\*.appx"') do (
+			<nul set /p=Installation de %%i... 
+			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
+		)
+		echo OK
+	)
+	if exist "%~dp0\*.appxbundle" (
+		set found=1
+		for /f "delims=" %%i in ('dir /B "%~dp0\*.appxbundle"') do (
+			<nul set /p=Installation de %%i... 
+			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
+		)
+		echo OK
+	)
+	if %found%==0 (
+		echo Aucune mise a jour trouvee dans le dossier actuel.
+		echo.
+		pause
+		goto main
+	)
+	Endlocal
+	echo.
+	echo L'installation est terminee
+	echo.
+	call :callforrestart
+goto main
+
+
+
 :: Titre
 :titre
-	echo 			     ==============================
-	echo 			     ^|^|  MG Toolkit (v%toolkit_version%)  ^|^|
-	echo 			     ==============================
+	echo 			 =====================================
+	echo 			 ^|^|  MG Toolkit Legacy (v%toolkit_version%)  ^|^|
+	echo 			 =====================================
 goto :eof
 
 

@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260830
+set toolkit_version=20260915
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -186,7 +186,7 @@ goto main
 	if /i "%choix%"=="16" (goto reparation_win)
 	if /i "%choix%"=="17" (goto reparation_win_intaller)
 	if /i "%choix%"=="18" (goto reparation_wu)
-	if /i "%choix%"=="19" (goto Windows_update)
+	if /i "%choix%"=="19" (goto windows_update)
 	if /i "%choix%"=="20" (start https://1drv.ms/f/c/011dbcd351618514/IgAUhWFR07wdIIAB3voDAAAAAcBLZB30-366q14Z-fKgndE)
 	if /i "%choix%"=="0" (exit)
 goto main
@@ -1160,7 +1160,7 @@ goto main
 
 
 :: Windows Update
-:Windows_update
+:windows_update
 	cls
 	echo.
 	call :titre
