@@ -147,6 +147,7 @@ goto main
 		if %errorlevel%==1 (
 			goto activation_mas
 		) else (
+			echo.
 			echo Cette fonctionnalite n'est pas compatible avec Windows XP !
 			pause
 			goto main
@@ -159,6 +160,7 @@ goto main
 		if %errorlevel%==1 (
 			goto configuration_privacy
 		) else (
+			echo.
 			echo Cette fonctionnalite n'est pas compatible avec Windows XP !
 			pause
 			goto main
@@ -166,9 +168,10 @@ goto main
 	)
 	if /i "%choix%"=="5" (
 		ver | find /i "version 5" 1>nul
-		if %errorlevel%==0 (
+		if %errorlevel%==1 (
 			goto oem_information
 		) else (
+			echo.
 			echo Cette fonctionnalite n'est pas compatible avec Windows XP !
 			pause
 			goto main
