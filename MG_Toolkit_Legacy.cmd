@@ -22,11 +22,11 @@ if not exist "%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe" (
 :: Contrôle des droits d'administrateur
 net session >nul 2>&1
 if %errorlevel%==1 (
-    echo.
+	echo.
 	echo Ce script nécessite des droits d'administrateur !
-    echo.
-    pause
-    exit
+	echo.
+	pause
+	exit
 )
 
 
@@ -94,7 +94,7 @@ if "%bitness%"=="EM64T" (
 	echo __________________________________________________________________________________________
 	echo.
 	echo                             Votre OS n'est pas compatible
-	echo        Ce programme supporte de Windows XP à 8.1 et nécessite la présence de Powershell
+	echo       Ce programme supporte de Windows XP à 8.1 et nécessite la présence de Powershell
 	echo                         Le programme va maintenant se fermer
 	echo __________________________________________________________________________________________
 	echo.
