@@ -22,11 +22,11 @@ if not exist "%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe" (
 :: Contrôle des droits d'administrateur
 net session >nul 2>&1
 if %errorlevel%==1 (
-	echo.
+    echo.
 	echo Ce script nécessite des droits d'administrateur !
-	echo.
-	pause
-	exit
+    echo.
+    pause
+    exit
 )
 
 
@@ -51,8 +51,6 @@ if "%bitness%"=="IA64" (
 if "%bitness%"=="EM64T" (
 	set archi=EM64T
 )
-
-
 
 :AfterTest
 	cls
@@ -87,14 +85,12 @@ if "%bitness%"=="EM64T" (
 	)
 	goto OSOK
 
-
-
 :OSNoOK
 	echo.
 	echo __________________________________________________________________________________________
 	echo.
 	echo                             Votre OS n'est pas compatible
-	echo       Ce programme supporte de Windows XP à 8.1 et nécessite la présence de Powershell
+	echo        Ce programme supporte de Windows XP à 8.1 et nécessite la présence de Powershell
 	echo                         Le programme va maintenant se fermer
 	echo __________________________________________________________________________________________
 	echo.
@@ -118,6 +114,29 @@ goto main
 :main
 	cls
 	echo.
+	call :titre
+	echo.
+	echo   %gray%%under%Activation de Windows / Office / ESU%u%
+	echo.
+	echo 	1.  Activation (MAS)			2.  Status d'activation
+	echo.
+	echo   %gray%%under%Utilitaires de configuration et maintenance%u%
+	echo.
+	echo 	3.  Configuration performances		5.  Ajout/suppression fonctionnalités
+	echo 	4.  Configuration vie privée		6.  Modification informations OEM
+	echo.
+	echo   %gray%%under%Utilitaires de maintenance%u%
+	echo.
+	echo 	7.  Défragmentation système		13. Réparation référentiel WMI %red%/!\%u%
+	echo 	8.  Nettoyage système			14. Réparation réseau
+	echo 	9.  Nettoyage système complet %red%/!\%u%	15. Réparation réseau complète
+	echo 	10. Nettoyage Windows Installer %red%/!\%u%	16. Réparation système Windows
+	echo 	11. Réparation apps Windows		17. Réparation Windows Installer
+	echo 	12. Réparation cache d'icônes		18. Réparation Windows Update
+	echo.
+	echo   %gray%%under%Divers%u%
+	echo.
+	echo 	19. Installer des mises à jour		20. Logithèque en ligne
 	echo.
 	echo __________________________________________________________________________________________
 	echo.
