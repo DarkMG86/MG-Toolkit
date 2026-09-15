@@ -144,7 +144,7 @@ goto main
 	set /p choix=Selectionnez l'operation a effectuer (0 pour quitter): 
 	if /i "%choix%"=="1" (
 		ver | find /i "version 5" 1>nul
-		if %errorlevel%==0 (
+		if %errorlevel%==1 (
 			goto activation_mas
 		) else (
 			echo Cette fonctionnalite n'est pas compatible avec Windows XP !
@@ -156,7 +156,7 @@ goto main
 	if /i "%choix%"=="3" (goto configuration_performances)
 	if /i "%choix%"=="4" (
 		ver | find /i "version 5" 1>nul
-		if %errorlevel%==0 (
+		if %errorlevel%==1 (
 			goto configuration_privacy
 		) else (
 			echo Cette fonctionnalite n'est pas compatible avec Windows XP !
@@ -209,7 +209,7 @@ goto main
 	echo.
 	call :titre
 	echo.
-	call :ColorText 0c "Status de l'activation de Windows"
+	echo Status de l'activation de Windows
 	ver | find /i "version 5" 1>nul
 	if %errorlevel%==0 (
 		%SYSTEMROOT%\system32\oobe\msoobe /a
@@ -351,7 +351,7 @@ goto main
 	echo Optimisation terminee
 	echo.
 	call :callforrestart
-goto main_configuration
+goto main
 
 
 
@@ -558,7 +558,7 @@ goto main
 	echo.
 	echo Defragmentation de Windows
 	echo.
-	defrag /u /v %SYSTEMDRIVE%
+	defrag /v %SYSTEMDRIVE%
 	echo.
 	echo La defragmentation est terminee
 	echo.
