@@ -30,36 +30,6 @@ if %errorlevel%==1 (
 )
 
 
-:: Vérification de la présence d'une mise à jour
-echo.
-call :titre
-echo.
-echo Vérification de la présence d'une mise à jour...
-echo.
-del "%TEMP%\version_Legacy.txt" 1>nul 2>nul
-powershell -Command "(New-Object Net.WebClient).DownloadFile('https://github.com/DarkMG86/MG-Toolkit/raw/refs/heads/main/version_Legacy.txt', '%TEMP%\version_Legacy.txt')" 1>nul 2>nul
-set /p controle_version_toolkit=<%TEMP%\version_Legacy.txt 1>nul 2>nul
-if exist "%TEMP%\version_Legacy.txt" (
-	if not "%controle_version_toolkit%"=="%toolkit_version%" (
-		powershell -Command "(New-Object Net.WebClient).DownloadFile('https://github.com/DarkMG86/MG-Toolkit/raw/refs/heads/main/MG_Toolkit_Legacy.cmd', '%~dp0\MG_Toolkit_Legacy_new.cmd')"
-		if exist "%~dp0\MG_Toolkit_Legacy_new.cmd" (
-			timeout /t 1 >nul
-			del /f "%~dp0\MG_Toolkit_Legacy.cmd"
-			rename "%~dp0\MG_Toolkit_Legacy_new.cmd" "MG_Toolkit_Legacy.cmd"
-			echo La version %controle_version_toolkit% a été téléchargée avec succès
-			echo Veuillez exécuter à nouveau le programme
-			echo.
-			pause
-			exit /b
-		) else (
-			echo Échec du téléchargement de la mise à jour
-		)
-	)
-) else (
-	echo Échec de la vérification de la mise à jour
-)
-
-
 
 :: Controle de la version de Windows utilisée
 for /f "tokens=3 usebackq" %%a in (`reg query "HKLM\System\CurrentControlSet\Control\Session Manager\Environment" /v PROCESSOR_ARCHITECTURE`) do set "bitness=%%a"
@@ -90,15 +60,30 @@ if "%bitness%"=="EM64T" (
 	call :titre
 	echo.
 	echo.
-	echo 	%under%Votre configuration système :%u%
+	echo 	Votre configuration systeme :
+	echo 	-----------------------------
 	echo.
-	echo 	Fabricant :              %BIOS_FABRICANT%
-	echo 	Version du BIOS :        %BIOS_VERSION%
-	echo 	Système d'exploitation : %Caption%
+	for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
+	echo 	Systeme d'exploitation : %Caption%
+	for /f "tokens=*" %%f in ('wmic os get CSDVersion /value ^| find "="') do set "%%f"
+	if "%CSDVersion%" NEQ "" (
+		echo 	Service Pack :           %CSDVersion%
+	) else (
+		echo 	Service Pack :           RTM
+	)
 	echo 	Architecture :           %archi%
-	echo 	Version :                %major%.%minor%.%build%.%revision%
-	for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLabEx" 2^>nul') do (
-		echo 	Build :                  %%b
+	for /f "tokens=*" %%f in ('wmic os get Version /value ^| find "="') do set "%%f"
+	for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=%%h& set build=%%i& set revision=%%j)
+	echo 	Version :                %Version%
+    ver | find /i "version 5.1" 1>nul 2>nul
+	if %errorlevel%==0 (
+		for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLab" 2^>nul') do (
+			echo 	Build :                  %%b
+		)
+	) else (
+		for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLabEx" 2^>nul') do (
+			echo 	Build :                  %%b
+		)
 	)
 	goto OSOK
 
