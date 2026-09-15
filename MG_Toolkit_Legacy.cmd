@@ -90,7 +90,7 @@ if "%bitness%"=="EM64T" (
 	echo __________________________________________________________________________________________
 	echo.
 	echo                             Votre OS n'est pas compatible
-	echo        Ce programme supporte de Windows XP à 8.1 et nécessite la présence de Powershell
+	echo       Ce programme supporte de Windows XP à 8.1 et nécessite la présence de Powershell
 	echo                         Le programme va maintenant se fermer
 	echo __________________________________________________________________________________________
 	echo.
@@ -116,25 +116,25 @@ goto main
 	echo.
 	call :titre
 	echo.
-	echo   %gray%%under%Activation de Windows / Office / ESU%u%
+	echo   Activation de Windows / Office
 	echo.
 	echo 	1.  Activation (MAS)			2.  Status d'activation
 	echo.
-	echo   %gray%%under%Utilitaires de configuration et maintenance%u%
+	echo   Utilitaires de configuration et maintenance
 	echo.
 	echo 	3.  Configuration performances		5.  Ajout/suppression fonctionnalités
 	echo 	4.  Configuration vie privée		6.  Modification informations OEM
 	echo.
-	echo   %gray%%under%Utilitaires de maintenance%u%
+	echo   Utilitaires de maintenance
 	echo.
-	echo 	7.  Défragmentation système		13. Réparation référentiel WMI %red%/!\%u%
+	echo 	7.  Défragmentation système		13. Réparation référentiel WMI /!\
 	echo 	8.  Nettoyage système			14. Réparation réseau
-	echo 	9.  Nettoyage système complet %red%/!\%u%	15. Réparation réseau complète
-	echo 	10. Nettoyage Windows Installer %red%/!\%u%	16. Réparation système Windows
+	echo 	9.  Nettoyage système complet /!\	15. Réparation réseau complète
+	echo 	10. Nettoyage Windows Installer /!\	16. Réparation système Windows
 	echo 	11. Réparation apps Windows		17. Réparation Windows Installer
 	echo 	12. Réparation cache d'icônes		18. Réparation Windows Update
 	echo.
-	echo   %gray%%under%Divers%u%
+	echo   Divers
 	echo.
 	echo 	19. Installer des mises à jour		20. Logithèque en ligne
 	echo.
@@ -162,6 +162,24 @@ goto main
 	if /i "%choix%"=="19" (goto Windows_update)
 	if /i "%choix%"=="20" (start https://1drv.ms/f/c/011dbcd351618514/IgAUhWFR07wdIIAB3voDAAAAAcBLZB30-366q14Z-fKgndE)
 	if /i "%choix%"=="0" (exit)
+goto main
+
+
+
+:: Activation de Windows / Office
+:activation_mas
+	cls
+	echo.
+	call :titre
+	echo.
+	echo Activation de Windows - Office (MAS)
+	echo.
+	echo IMPORTANT :
+	echo Une connexion Internet est requise.
+	echo Il est nécessaire de désactiver votre antivirus avant de poursuivre !
+	echo.
+	pause
+	powershell -Command "(irm https://get.activated.win | iex)" 1>nul 2>nul
 goto main
 
 
