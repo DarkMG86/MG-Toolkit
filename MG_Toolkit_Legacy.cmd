@@ -20,8 +20,14 @@ if not exist "%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe" (
 
 
 :: Contrôle des droits d'administrateur
-if not "%1"=="admin" (powershell start -verb runas '%0' admin & exit /b)
-
+net session >nul 2>&1
+if %errorlevel%==1 (
+    echo.
+	echo Ce script necessite des droits d'administrateur !
+    echo.
+    pause
+    exit
+)
 
 
 :OSNoOK
