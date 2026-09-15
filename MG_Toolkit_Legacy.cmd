@@ -23,36 +23,11 @@ if not exist "%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe" (
 net session >nul 2>&1
 if %errorlevel%==1 (
     echo.
-	echo Ce script necessite des droits d'administrateur !
+	echo Ce script nécessite des droits d'administrateur !
     echo.
     pause
     exit
 )
-
-
-:OSNoOK
-	echo.
-	echo __________________________________________________________________________________________
-	echo.
-	echo                             Votre OS n'est pas compatible
-	echo        Ce programme supporte de Windows XP à 8.1 et nécessite la présence de Powershell
-	echo                         Le programme va maintenant se fermer
-	echo __________________________________________________________________________________________
-	echo.
-	pause
-exit
-
-:OSOK
-	echo.
-	echo __________________________________________________________________________________________
-	echo.
-	echo                                Votre système est compatible
-	echo        !!! Il est recommandé de désactiver votre antivirus avant de poursuivre !!!
-	echo __________________________________________________________________________________________
-	echo.
-	pause
-goto main
-
 
 
 :: Vérification de la présence d'une mise à jour
@@ -126,6 +101,31 @@ if "%bitness%"=="EM64T" (
 		echo 	Build :                  %%b
 	)
 	goto OSOK
+
+
+
+:OSNoOK
+	echo.
+	echo __________________________________________________________________________________________
+	echo.
+	echo                             Votre OS n'est pas compatible
+	echo        Ce programme supporte de Windows XP à 8.1 et nécessite la présence de Powershell
+	echo                         Le programme va maintenant se fermer
+	echo __________________________________________________________________________________________
+	echo.
+	pause
+exit
+
+:OSOK
+	echo.
+	echo __________________________________________________________________________________________
+	echo.
+	echo                                Votre système est compatible
+	echo        !!! Il est recommandé de désactiver votre antivirus avant de poursuivre !!!
+	echo __________________________________________________________________________________________
+	echo.
+	pause
+goto main
 
 
 
