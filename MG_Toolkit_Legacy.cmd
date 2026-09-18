@@ -672,11 +672,11 @@ goto main
 	)
 	setlocal EnableDelayedExpansion
 	set found=0
-	if exist "%~dp0\*.cab" (
+	if exist "%~dp0*.cab" (
 		set found=1
-		for /f "delims=" %%i in ('dir /B "%~dp0\*.cab"') do (
+		for /f "delims=" %%i in ('dir /B "%~dp0*.cab"') do (
 			<nul set /p=Installation de %%i... 
-			dism /online /add-package /packagepath:"%~dp0\%%i" /quiet /norestart 1>nul 2>nul
+			dism /online /add-package /packagepath:"%~dp0%%i" /quiet /norestart 1>nul 2>nul
 			if !errorlevel! EQU 0 (
 				echo OK
 			) else if !errorlevel! EQU 3010 (
@@ -686,11 +686,11 @@ goto main
 			)
 		)
 	)
-	if exist "%~dp0\*.msu" (
+	if exist "%~dp0*.msu" (
 		set found=1
-		for /f "delims=" %%i in ('dir /B "%~dp0\*.msu"') do (
+		for /f "delims=" %%i in ('dir /B "%~dp0*.msu"') do (
 			<nul set /p=Installation de %%i... 
-			dism /online /add-package /packagepath:"%~dp0\%%i" /quiet /norestart 1>nul 2>nul
+			dism /online /add-package /packagepath:"%~dp0%%i" /quiet /norestart 1>nul 2>nul
 			if !errorlevel! EQU 0 (
 				echo OK
 			) else if !errorlevel! EQU 3010 (
@@ -700,19 +700,19 @@ goto main
 			)
 		)
 	)
-	if exist "%~dp0\*.exe" (
+	if exist "%~dp0*.exe" (
 		set found=1
-		for /f "delims=" %%i in ('dir /B "%~dp0\*.exe"') do (
+		for /f "delims=" %%i in ('dir /B "%~dp0*.exe"') do (
 			<nul set /p=Installation de %%i...
 			echo %%i | findstr /i /r /c:"^DirectX_Redist_Repack.*\.exe$" >nul
 			if not !errorlevel! EQU 1 (
-				"%~dp0\%%i" /ai /gm2
+				"%~dp0%%i" /ai /gm2
 			) else (
 				echo %%i | findstr /i /r /c:"^VisualCppRedist_AIO.*\.exe$" >nul
 				if not !errorlevel! EQU 1 (
-					"%~dp0\%%i" /ai /gm2
+					"%~dp0%%i" /ai /gm2
 				) else (
-					"%~dp0\%%i" /quiet /norestart
+					"%~dp0%%i" /quiet /norestart
 				)
 			)
 			if !errorlevel! EQU 0 (
@@ -724,19 +724,19 @@ goto main
 			)
 		)
 	)
-	if exist "%~dp0\*.appx" (
+	if exist "%~dp0*.appx" (
 		set found=1
-		for /f "delims=" %%i in ('dir /B "%~dp0\*.appx"') do (
+		for /f "delims=" %%i in ('dir /B "%~dp0*.appx"') do (
 			<nul set /p=Installation de %%i... 
-			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
+			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0%%i'" 1>nul 2>nul
 		)
 		echo OK
 	)
-	if exist "%~dp0\*.appxbundle" (
+	if exist "%~dp0*.appxbundle" (
 		set found=1
-		for /f "delims=" %%i in ('dir /B "%~dp0\*.appxbundle"') do (
+		for /f "delims=" %%i in ('dir /B "%~dp0*.appxbundle"') do (
 			<nul set /p=Installation de %%i... 
-			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0\%%i'" 1>nul 2>nul
+			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0%%i'" 1>nul 2>nul
 		)
 		echo OK
 	)
