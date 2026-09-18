@@ -706,13 +706,13 @@ goto main
 			<nul set /p=Installation de %%i...
 			echo %%i | findstr /i /r /c:"^DirectX_Redist_Repack.*\.exe$" >nul
 			if not !errorlevel! EQU 1 (
-				"%~dp0%%i" /ai /gm2
+				start "" /wait "%~dp0%%i" /ai /gm2
 			) else (
 				echo %%i | findstr /i /r /c:"^VisualCppRedist_AIO.*\.exe$" >nul
 				if not !errorlevel! EQU 1 (
-					"%~dp0%%i" /ai /gm2
+					start "" /wait "%~dp0%%i" /ai /gm2
 				) else (
-					"%~dp0%%i" /quiet /norestart
+					start "" /wait "%~dp0%%i" /quiet /norestart
 				)
 			)
 			if !errorlevel! EQU 0 (
