@@ -1172,9 +1172,9 @@ goto main
 	echo.
 	echo Les types de fichier pris en charge sont :
 	echo .cab .msu .exe .appx .appxbundle .msix .msixbundle
-	echo DirectX_Redist_Repack_x86_x64.exe	(abbodi1406)
-	echo VisualCppRedist_AIO-arm64.exe		(abbodi1406)
-	echo VisualCppRedist_AIO_x86_x64.exe	(abbodi1406)
+	echo DirectX_Redist_Repack_x86_x64.exe (abbodi1406)
+	echo VisualCppRedist_AIO-arm64.exe (abbodi1406)
+	echo VisualCppRedist_AIO_x86_x64.exe (abbodi1406)
 	echo.
 	echo __________________________________________________________________________________________
 	echo.
