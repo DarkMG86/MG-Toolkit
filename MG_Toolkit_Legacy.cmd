@@ -150,13 +150,6 @@ goto main
 			pause
 			goto main
 		)
-		ver | find /i "version 6.0"1>nul
-		if not %errorlevel%==1 (
-			echo.
-			echo Cette fonctionnalite n'est pas compatible avec Windows Vista !
-			pause
-			goto main
-		)
 		goto activation_mas
 	)
 	if /i "%choix%"=="2" (goto activation_status)
