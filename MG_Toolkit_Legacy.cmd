@@ -144,27 +144,39 @@ goto main
 	set /p choix=Selectionnez l'operation a effectuer (0 pour quitter): 
 	if /i "%choix%"=="1" (
 		ver | find /i "version 5" 1>nul
-		if %errorlevel%==1 (
-			goto activation_mas
-		) else (
+		if not %errorlevel%==1 (
 			echo.
 			echo Cette fonctionnalite n'est pas compatible avec Windows XP !
 			pause
 			goto main
 		)
+		ver | find /i "version 6.0"1>nul
+		if not %errorlevel%==1 (
+			echo.
+			echo Cette fonctionnalite n'est pas compatible avec Windows Vista !
+			pause
+			goto main
+		)
+		goto activation_mas
 	)
 	if /i "%choix%"=="2" (goto activation_status)
 	if /i "%choix%"=="3" (goto configuration_performances)
 	if /i "%choix%"=="4" (
 		ver | find /i "version 5" 1>nul
-		if %errorlevel%==1 (
-			goto configuration_privacy
-		) else (
+		if not %errorlevel%==1 (
 			echo.
 			echo Cette fonctionnalite n'est pas compatible avec Windows XP !
 			pause
 			goto main
 		)
+		ver | find /i "version 6.0"1>nul
+		if not %errorlevel%==1 (
+			echo.
+			echo Cette fonctionnalite n'est pas compatible avec Windows Vista !
+			pause
+			goto main
+		)
+		goto configuration_privacy
 	)
 	if /i "%choix%"=="5" (
 		ver | find /i "version 5" 1>nul
@@ -656,9 +668,12 @@ goto main
 	echo.
 	echo Le programme va maintenant installer les mises a jour presentes dans le dossier actuel.
 	echo En cas d'erreur ou d'incompatibilite, un message s'affichera.
-	echo Les packages VC++ AIO et DirectX d'abbodi1406 seront egalement installes si present.
 	echo.
-	echo Les extensions reconnues sont : .cab .msu .exe .appx .appxbundle
+	echo Les types de fichier pris en charge sont :
+	echo .cab .msu .exe .appx .appxbundle
+	echo DirectX_Redist_Repack_x86_x64.exe	(abbodi1406)
+	echo VisualCppRedist_AIO-arm64.exe		(abbodi1406)
+	echo VisualCppRedist_AIO_x86_x64.exe	(abbodi1406)
 	echo.
 	echo __________________________________________________________________________________________
 	echo.
@@ -700,20 +715,16 @@ goto main
 			)
 		)
 	)
-	if exist "%~dp0*.exe" (
+	if exist "%~dp0\*.exe" (
 		set found=1
-		for /f "delims=" %%i in ('dir /B "%~dp0*.exe"') do (
-			<nul set /p=Installation de %%i...
-			echo %%i | findstr /i /r /c:"^DirectX_Redist_Repack.*\.exe$" >nul
-			if not !errorlevel! EQU 1 (
-				start "" /wait "%~dp0%%i" /ai /gm2
+		for /f "delims=" %%i in ('dir /B "%~dp0\*.exe"') do (
+			<nul set /p=Installation de %%i... 
+			if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
+				"%~dp0\%%i" /ai /gm2
+			) else if "%%i"=="VisualCppRedist_AIO_x86_x64.exe" (
+				"%~dp0\%%i" /ai /gm2
 			) else (
-				echo %%i | findstr /i /r /c:"^VisualCppRedist_AIO.*\.exe$" >nul
-				if not !errorlevel! EQU 1 (
-					start "" /wait "%~dp0%%i" /ai /gm2
-				) else (
-					start "" /wait "%~dp0%%i" /quiet /norestart
-				)
+				"%~dp0\%%i" /quiet /norestart
 			)
 			if !errorlevel! EQU 0 (
 				echo OK

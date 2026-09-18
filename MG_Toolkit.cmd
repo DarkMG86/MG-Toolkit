@@ -1169,9 +1169,12 @@ goto main
 	echo.
 	echo Le programme va maintenant installer les mises à jour présentes dans le dossier actuel.
 	echo En cas d'erreur ou d'incompatibilité, un message s'affichera.
-	echo Les packages VC++ AIO et DirectX d'abbodi1406 seront également installés si présent.
 	echo.
-	echo Les extensions reconnues sont : .cab .msu .exe .appx .appxbundle .msix .msixbundle
+	echo Les types de fichier pris en charge sont :
+	echo .cab .msu .exe .appx .appxbundle .msix .msixbundle
+	echo DirectX_Redist_Repack_x86_x64.exe	(abbodi1406)
+	echo VisualCppRedist_AIO-arm64.exe		(abbodi1406)
+	echo VisualCppRedist_AIO_x86_x64.exe	(abbodi1406)
 	echo.
 	echo __________________________________________________________________________________________
 	echo.
@@ -1216,17 +1219,15 @@ goto main
 	if exist "%~dp0\*.exe" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.exe"') do (
-			<nul set /p=Installation de %%i...
-			echo %%i | findstr /i /r /c:"^DirectX_Redist_Repack.*\.exe$" >nul
-			if not !errorlevel! EQU 1 (
+			<nul set /p=Installation de %%i... 
+			if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
+				"%~dp0\%%i" /ai /gm2
+			) else if "%%i"=="VisualCppRedist_AIO-arm64.exe" (
+				"%~dp0\%%i" /ai /gm2
+			) else if "%%i"=="VisualCppRedist_AIO_x86_x64.exe" (
 				"%~dp0\%%i" /ai /gm2
 			) else (
-				echo %%i | findstr /i /r /c:"^VisualCppRedist_AIO.*\.exe$" >nul
-				if not !errorlevel! EQU 1 (
-					"%~dp0\%%i" /ai /gm2
-				) else (
-					"%~dp0\%%i" /quiet /norestart
-				)
+				"%~dp0\%%i" /quiet /norestart
 			)
 			if !errorlevel! EQU 0 (
 				echo OK
