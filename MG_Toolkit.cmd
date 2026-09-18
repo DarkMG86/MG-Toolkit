@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260915
+set toolkit_version=20260918
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -1216,16 +1216,22 @@ goto main
 	if exist "%~dp0\*.exe" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0\*.exe"') do (
-			<nul set /p=Installation de %%i... 
-			if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
-				"%~dp0\%%i" /ai /gm2
-			) else if "%%i"=="VisualCppRedist_AIO_x86_x64.exe" (
+			<nul set /p=Installation de %%i...
+			echo %%i | findstr /i /r /c:"^DirectX_Redist_Repack.*\.exe$" >nul
+			if not !errorlevel! EQU 1 (
 				"%~dp0\%%i" /ai /gm2
 			) else (
-				"%~dp0\%%i" /quiet /norestart
+				echo %%i | findstr /i /r /c:"^VisualCppRedist_AIO.*\.exe$" >nul
+				if not !errorlevel! EQU 1 (
+					"%~dp0\%%i" /ai /gm2
+				) else (
+					"%~dp0\%%i" /quiet /norestart
+				)
 			)
 			if !errorlevel! EQU 0 (
 				echo OK
+			) else if !errorlevel! EQU 3010 (
+				echo OK - redemarrage requis
 			) else (
 				echo Erreur
 			)
