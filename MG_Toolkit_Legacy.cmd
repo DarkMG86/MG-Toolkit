@@ -87,7 +87,7 @@ if "%bitness%"=="EM64T" (
 	echo __________________________________________________________________________________________
 	echo.
 	echo                             Votre OS n'est pas compatible
-	echo                   Ce programme supporte de Windows 2000 a Windows 8.1
+	echo                 Ce programme supporte de Windows 2000 a Windows 8.1
 	echo                         Le programme va maintenant se fermer
 	echo __________________________________________________________________________________________
 	echo.
