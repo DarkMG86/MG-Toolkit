@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260918
+set toolkit_version=20260920
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 for /f "delims=" %%i in ('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
@@ -318,6 +318,7 @@ goto main
 	netsh int tcp set global autotuninglevel=normal 1>nul 2>nul
 	netsh int tcp set global chimney=disabled 1>nul 2>nul
 	netsh int tcp set global dca=enabled 1>nul 2>nul
+	netsh int tcp set global ecncapability=enabled 1>nul 2>nul
 	netsh int tcp set global initialRto=1000 1>nul 2>nul
 	netsh int tsp set global maxsynretransmissions=2 1>nul 2>nul
 	netsh int tcp set global nonsackrttresiliency=disabled 1>nul 2>nul
@@ -325,7 +326,7 @@ goto main
 	netsh int tcp set global rss=enabled 1>nul 2>nul
 	netsh int tcp set global timestamps=disabled 1>nul 2>nul
 	netsh int tcp set heuristics disabled 1>nul 2>nul
-	netsh int tcp set supplemental Internet congestionprovider=ctcp 1>nul 2>nul
+	netsh int tcp set supplemental Internet congestionprovider=CUBIC 1>nul 2>nul
 	netsh int tcp set supplemental template=custom icw=10 1>nul 2>nul
 	powercfg -duplicatescheme a1841308-3541-4fab-bc81-f71556f20b4a 1>nul 2>nul
 	powercfg -duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e 1>nul 2>nul
@@ -341,16 +342,18 @@ goto main
 	reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v MinAnimate /t REG_SZ /d 0 /f 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell" /v FolderType /t REG_SZ /d "NotSpecified" /f 1>nul 2>nul
-	reg add "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPER1_0SERVER" /v explorer.exe /t REG_DWORD /d 8 /f 1>nul 2>nul
-	reg add "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPER1_0SERVER" /v iexplore.exe /t REG_DWORD /d 8 /f 1>nul 2>nul
-	reg add "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPERSERVER" /v explorer.exe /t REG_DWORD /d 8 /f 1>nul 2>nul
-	reg add "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPERSERVER" /v iexplore.exe /t REG_DWORD /d 8 /f 1>nul 2>nul
+	reg add "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPER1_0SERVER" /v explorer.exe /t REG_DWORD /d 10 /f 1>nul 2>nul
+	reg add "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPER1_0SERVER" /v iexplore.exe /t REG_DWORD /d 10 /f 1>nul 2>nul
+	reg add "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPERSERVER" /v explorer.exe /t REG_DWORD /d 10 /f 1>nul 2>nul
+	reg add "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPERSERVER" /v iexplore.exe /t REG_DWORD /d 10 /f 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v DesktopProcess /t REG_DWORD /d 1 /f 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v HideFileExt /t REG_DWORD /d 0 /f 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v LaunchTo /t REG_DWORD /d 1 /f 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v SeparateProcess /t REG_DWORD /d 1 /f 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Start_TrackDocs /t REG_DWORD /d 0 /f 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" /v AppCaptureEnabled /t REG_DWORD /d 0 /f 1>nul 2>nul
+	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" /v MaxConnectionsPer1_0Server /t REG_DWORD /d 10 /f 1>nul 2>nul
+	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" /v MaxConnectionsPerServer /t REG_DWORD /d 10 /f 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v ConfirmFileDelete /t REG_DWORD /d 1 /f 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoResolveTrack /t REG_DWORD /d 1 /f 1>nul 2>nul
 	reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v BingSearchEnabled /t REG_DWORD /d 0 /f 1>nul 2>nul
@@ -373,6 +376,7 @@ goto main
 	reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v AllowMUUpdateService /t REG_DWORD /d 1 /f 1>nul 2>nul
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control" /v WaitToKillServiceTimeout /t REG_SZ /d 1000 /f 1>nul 2>nul
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v AutoReboot /t REG_DWORD /d 0 /f 1>nul 2>nul
+	reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v NtfsDisable8dot3NameCreation /t REG_DWORD /d 1 /f 1>nul 2>nul
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v NtfsMftZoneReservation /t REG_DWORD /d 4 /f 1>nul 2>nul
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" /v PowerThrottlingOff /t REG_DWORD /d 1 /f 1>nul 2>nul
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v Windows32PrioritySeparation /t REG_DWORD /d 26 /f 1>nul 2>nul
@@ -387,7 +391,8 @@ goto main
 	reg add "HKLM\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters" /v NetFailureCacheTime /t REG_DWORD /d 0 /f 1>nul 2>nul
 	reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v Size /t REG_DWORD /d 3 /f 1>nul 2>nul
 	reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v DefaultTTL /t REG_DWORD /d 64 /f 1>nul 2>nul
-	reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v EnablePMTUBHDetect /t REG_DWORD /d 1 /f 1>nul 2>nul
+	reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v DisableTaskOffload /t REG_DWORD /d 1 /f 1>nul 2>nul
+	reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v EnablePMTUBHDetect /t REG_DWORD /d 0 /f 1>nul 2>nul
 	reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v EnablePMTUDiscovery /t REG_DWORD /d 1 /f 1>nul 2>nul
 	reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v MaxUserPort /t REG_DWORD /d 65534 /f 1>nul 2>nul
 	reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v NameSrvQueryTimeout /t REG_DWORD /d 3000 /f 1>nul 2>nul
@@ -418,7 +423,7 @@ goto main
 	echo %red%Désactivation de la veille prolongée%u%
 	powercfg -hibernate off 1>nul 2>nul
 	echo.
-	powershell -command "Get-PhysicalDisk | select MediaType" | find /i "SD" 1>nul
+	powershell -command "Get-PhysicalDisk | select MediaType" | find /i "SD" 1>nul 2>nul
 	if %errorlevel%==0 (
 		echo %red%Optimisation du SSD%u%
 		fsutil behavior set DisableDeleteNotify 0 1>nul 2>nul
