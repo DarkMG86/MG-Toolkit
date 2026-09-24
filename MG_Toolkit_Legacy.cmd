@@ -26,31 +26,31 @@ if %errorlevel%==1 (
 	set build_win=""
 	ver | find /i "version 5.0" 1>nul 2>nul
 	if %errorlevel%==0 (
-		set build_win=5.0
+		set "build_win=5.0"
 	)
 	ver | find /i "version 5.1" 1>nul 2>nul
 	if %errorlevel%==0 (
-		set build_win=5.1
+		set "build_win=5.1"
 	)
 	ver | find /i "version 5.2" 1>nul 2>nul
 	if %errorlevel%==0 (
-		set build_win=5.2
+		set "build_win=5.2"
 	)
 	ver | find /i "version 6.0" 1>nul 2>nul
 	if %errorlevel%==0 (
-		set build_win=6.0
+		set "build_win=6.0"
 	)
 	ver | find /i "version 6.1" 1>nul 2>nul
 	if %errorlevel%==0 (
-		set build_win=6.1
+		set "build_win=6.1"
 	)
 	ver | find /i "version 6.2" 1>nul 2>nul
 	if %errorlevel%==0 (
-		set build_win=6.2
+		set "build_win=6.2"
 	)
 	ver | find /i "version 6.3" 1>nul 2>nul
 	if %errorlevel%==0 (
-		set build_win=6.3
+		set "build_win=6.3"
 	)
 	if "%build_win%"=="" (
 		goto OSNoOK
