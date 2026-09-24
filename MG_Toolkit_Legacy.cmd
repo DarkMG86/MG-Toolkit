@@ -87,18 +87,11 @@ if "%bitness%"=="EM64T" (
 	echo 	-----------------------------
 	echo.
 	if "%build_win%"=="5.0" (
-		echo 	Systeme d'exploitation : Windows 2000
-		for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "CSDVersion" 2^>nul') do (
-			if "%%b" NEQ "" (
-				echo 	Service Pack :           %%b
-			) else (
-				echo 	Service Pack :           RTM
-			)
-		)
+		echo 	Systeme d'exploitation :
+		echo.
+		ver
+		echo.
 		echo 	Architecture :           %archi%
-		for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "CurrentBuildNumber" 2^>nul') do (
-			echo 	Build :                  %%b
-		)
 	) else (
 		for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
 		echo 	Systeme d'exploitation : %Caption%
