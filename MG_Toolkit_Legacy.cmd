@@ -791,6 +791,10 @@ goto :eof
 :callforrestart
 	set /p choix=Voulez-vous redemarrer maintenant ? (O/N) : 
 	if /i "%choix%"=="o" (
+		if "%build_win%"=="5.0" (
+			rundll32.exe user.exe,ExitWindowsExec
+			exit
+		)
 		shutdown -r -f -t 0
 		exit
 	)
