@@ -23,20 +23,36 @@ if %errorlevel%==1 (
 
 :: Controle de la version de Windows utilisee
 :TestOS
-	set "os_valide=0"
-	for /f "tokens=4-5 delims=[.] " %%A in ('ver') do (
-		set "major=%%A"
-		set "minor=%%B"
+	set build_win=""
+	ver | find /i "version 5.0" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=5.0
 	)
-	set "build_win=%major%.%minor%"
-	if "%build_win%"=="5.0" set "os_valide=1"
-	if "%build_win%"=="5.1" set "os_valide=1"
-	if "%build_win%"=="5.2" set "os_valide=1"
-	if "%build_win%"=="6.0" set "os_valide=1"
-	if "%build_win%"=="6.1" set "os_valide=1"
-	if "%build_win%"=="6.2" set "os_valide=1"
-	if "%build_win%"=="6.3" set "os_valide=1"
-	if "%os_valide%"=="0" (
+	ver | find /i "version 5.1" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=5.1
+	)
+	ver | find /i "version 5.2" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=5.2
+	)
+	ver | find /i "version 6.0" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=6.0
+	)
+	ver | find /i "version 6.1" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=6.1
+	)
+	ver | find /i "version 6.2" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=6.2
+	)
+	ver | find /i "version 6.3" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=6.3
+	)
+	if "%build_win%"=="" (
 		goto OSNoOK
 	)
 
