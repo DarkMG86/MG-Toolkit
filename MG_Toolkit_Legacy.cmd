@@ -57,26 +57,6 @@ if "%build_win%"=="" (
 	goto OSNoOK
 )
 
-for /f "tokens=3 usebackq" %%a in (`reg query "HKLM\System\CurrentControlSet\Control\Session Manager\Environment" /v PROCESSOR_ARCHITECTURE`) do set "bitness=%%a"
-if "%bitness%"=="x86" (
-	set archi=x86
-)
-if "%bitness%"=="AMD64" (
-	set archi=x64
-)
-if "%bitness%"=="ARM" (
-	set archi=ARM
-)
-if "%bitness%"=="ARM64" (
-	set archi=ARM64
-)
-if "%bitness%"=="IA64" (
-	set archi=IA64
-)
-if "%bitness%"=="EM64T" (
-	set archi=EM64T
-)
-
 :AfterTest
 	cls
 	echo.
@@ -87,11 +67,10 @@ if "%bitness%"=="EM64T" (
 	echo 	-----------------------------
 	echo.
 	if "%build_win%"=="5.0" (
-		echo 	Systeme d'exploitation :
 		echo.
 		ver
 		echo.
-		echo 	Architecture :           %archi%
+		echo Architecture : %PROCESSOR_ARCHITECTURE%
 	) else (
 		for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
 		echo 	Systeme d'exploitation : %Caption%
@@ -101,7 +80,7 @@ if "%bitness%"=="EM64T" (
 		) else (
 			echo 	Service Pack :           RTM
 		)
-		echo 	Architecture :           %archi%
+		echo 	Architecture :           %PROCESSOR_ARCHITECTURE%
 		for /f "tokens=*" %%f in ('wmic os get Version /value ^| find "="') do set "%%f"
 		for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=%%h& set build=%%i& set revision=%%j)
 		echo 	Version :                %Version%
