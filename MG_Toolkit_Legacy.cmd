@@ -689,7 +689,7 @@ goto main
 	echo.
 	echo Analyse du systeme de fichiers Windows (CHKDSK)
 	set /p confirm=Souhaitez-vous analyser le systeme de fichiers au redemarrage ? [O/N] :
-	if /i "%confirm%" EQU "O" (
+	if /i "%confirm%"=="O" (
 		fsutil dirty set %SYSTEMDRIVE%
 	)
 	echo.
@@ -734,9 +734,9 @@ goto main
 		for /f "delims=" %%i in ('dir /B "%~dp0*.cab"') do (
 			<nul set /p=Installation de %%i... 
 			dism /online /add-package /packagepath:"%~dp0%%i" /quiet /norestart 1>nul 2>nul
-			if !errorlevel! EQU 0 (
+			if !errorlevel!==0 (
 				echo OK
-			) else if !errorlevel! EQU 3010 (
+			) else if !errorlevel!==3010 (
 				echo OK - redemarrage requis
 			) else (
 				echo Erreur
@@ -748,9 +748,9 @@ goto main
 		for /f "delims=" %%i in ('dir /B "%~dp0*.msu"') do (
 			<nul set /p=Installation de %%i... 
 			dism /online /add-package /packagepath:"%~dp0%%i" /quiet /norestart 1>nul 2>nul
-			if !errorlevel! EQU 0 (
+			if !errorlevel!==0 (
 				echo OK
-			) else if !errorlevel! EQU 3010 (
+			) else if !errorlevel!==3010 (
 				echo OK - redemarrage requis
 			) else (
 				echo Erreur
@@ -772,9 +772,9 @@ goto main
 					"%~dp0\%%i" /quiet /norestart
 				)
 			)
-			if !errorlevel! EQU 0 (
+			if !errorlevel!==0 (
 				echo OK
-			) else if !errorlevel! EQU 3010 (
+			) else if !errorlevel!==3010 (
 				echo OK - redemarrage requis
 			) else (
 				echo Erreur
