@@ -24,15 +24,9 @@ if %errorlevel%==1 (
 :: Controle de la version de Windows utilisee
 :TestOS
 	set "os_valide=0"
-	for /f "tokens=3-4 delims=[.] " %%A in ('ver') do (
-    	set "major=%%A"
-   		set "minor=%%B"
-	)
-	if "%major%"=="version" (
-		for /f "tokens=4-5 delims=[.] " %%A in ('ver') do (
-			set "major=%%A"
-			set "minor=%%B"
-		)
+	for /f "tokens=4-5 delims=[.] " %%A in ('ver') do (
+		set "major=%%A"
+		set "minor=%%B"
 	)
 	set "build_win=%major%.%minor%"
 	if "%build_win%"=="5.0" set "os_valide=1"
