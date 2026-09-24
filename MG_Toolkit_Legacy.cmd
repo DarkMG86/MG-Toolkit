@@ -23,39 +23,21 @@ if %errorlevel%==1 (
 
 :: Controle de la version de Windows utilisee
 :TestOS
-	for /f "tokens=6 delims=[]. " %%G in ('ver') do set build=%%G
 	set build_win=""
-	ver | find /i "version 5.0" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=5.0
+	for /f "tokens=3-4 delims=[.] " %%A in ('ver') do (
+    	set "major=%%A"
+   		set "minor=%%B"
 	)
-	ver | find /i "version 5.1" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=5.1
+	if "%major%"=="version" (
+		for /f "tokens=4-5 delims=[.] " %%A in ('ver') do (
+			set "major=%%A"
+			set "minor=%%B"
+		)
 	)
-	ver | find /i "version 5.2" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=5.2
+	set "build_win=%major%.%minor%"
+	if "%build_win%"=="" (
+		goto OSNoOK
 	)
-	ver | find /i "version 6.0" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=6.0
-	)
-	ver | find /i "version 6.1" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=6.1
-	)
-	ver | find /i "version 6.2" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=6.2
-	)
-	ver | find /i "version 6.3" 1>nul 2>nul
-	if %errorlevel%==0 (
-		set build_win=6.3
-	)
-if "%build_win%"=="" (
-	goto OSNoOK
-)
 
 :AfterTest
 	cls
