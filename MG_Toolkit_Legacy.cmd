@@ -1,18 +1,11 @@
+:: Paramétrage du script et vérification de la compatibilité
 @echo off
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260920
+set toolkit_version=20260924
 title MG Toolkit Legacy (v%toolkit_version%)
 mode con cols=90 lines=40
-
-
-
-:: Contrôle des prerequis (minimum Windows 2000 et maximum Windows 8.1)
-for /f "tokens=2 delims==" %%V in ('wmic os get version /value') do @set V=%%V
-if not "%V%" GEQ "5.0" if not "%V%" LSS "6.4" (
-	goto OSNoOK
-)
 
 
 
@@ -29,6 +22,41 @@ if %errorlevel%==1 (
 
 
 :: Controle de la version de Windows utilisee
+:TestOS
+	for /f "tokens=6 delims=[]. " %%G in ('ver') do set build=%%G
+	set build_win=""
+	ver | find /i "version 5.0" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=5.0
+	)
+	ver | find /i "version 5.1" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=5.1
+	)
+	ver | find /i "version 5.2" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=5.2
+	)
+	ver | find /i "version 6.0" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=6.0
+	)
+	ver | find /i "version 6.1" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=6.1
+	)
+	ver | find /i "version 6.2" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=6.2
+	)
+	ver | find /i "version 6.3" 1>nul 2>nul
+	if %errorlevel%==0 (
+		set build_win=6.3
+	)
+if "%build_win%"=="" (
+	goto OSNoOK
+)
+
 for /f "tokens=3 usebackq" %%a in (`reg query "HKLM\System\CurrentControlSet\Control\Session Manager\Environment" /v PROCESSOR_ARCHITECTURE`) do set "bitness=%%a"
 if "%bitness%"=="x86" (
 	set archi=x86
@@ -58,26 +86,41 @@ if "%bitness%"=="EM64T" (
 	echo 	Votre configuration systeme :
 	echo 	-----------------------------
 	echo.
-	for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
-	echo 	Systeme d'exploitation : %Caption%
-	for /f "tokens=*" %%f in ('wmic os get CSDVersion /value ^| find "="') do set "%%f"
-	if "%CSDVersion%" NEQ "" (
-		echo 	Service Pack :           %CSDVersion%
-	) else (
-		echo 	Service Pack :           RTM
-	)
-	echo 	Architecture :           %archi%
-	for /f "tokens=*" %%f in ('wmic os get Version /value ^| find "="') do set "%%f"
-	for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=%%h& set build=%%i& set revision=%%j)
-	echo 	Version :                %Version%
-    ver | find /i "version 5" 1>nul 2>nul
-	if %errorlevel%==0 (
-		for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLab" 2^>nul') do (
+	if "%build_win%"=="5.0" (
+		echo 	Systeme d'exploitation : Windows 2000
+		for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "CSDVersion" 2^>nul') do (
+			if "%%b" NEQ "" (
+				echo 	Service Pack :           %%b
+			) else (
+				echo 	Service Pack :           RTM
+			)
+		)
+		echo 	Architecture :           %archi%
+		for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "CurrentBuildNumber" 2^>nul') do (
 			echo 	Build :                  %%b
 		)
 	) else (
-		for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLabEx" 2^>nul') do (
-			echo 	Build :                  %%b
+		for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
+		echo 	Systeme d'exploitation : %Caption%
+		for /f "tokens=*" %%f in ('wmic os get CSDVersion /value ^| find "="') do set "%%f"
+		if "%CSDVersion%" NEQ "" (
+			echo 	Service Pack :           %CSDVersion%
+		) else (
+			echo 	Service Pack :           RTM
+		)
+		echo 	Architecture :           %archi%
+		for /f "tokens=*" %%f in ('wmic os get Version /value ^| find "="') do set "%%f"
+		for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=%%h& set build=%%i& set revision=%%j)
+		echo 	Version :                %Version%
+		ver | find /i "version 5" 1>nul 2>nul
+		if %errorlevel%==0 (
+			for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLab" 2^>nul') do (
+				echo 	Build :                  %%b
+			)
+		) else (
+			for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLabEx" 2^>nul') do (
+				echo 	Build :                  %%b
+			)
 		)
 	)
 	goto OSOK
@@ -351,23 +394,25 @@ goto main
 	echo Desactivation de la veille prolongee
 	powercfg -hibernate off 1>nul 2>nul
 	echo.
-	powershell -command "Get-PhysicalDisk | select MediaType" | find /i "SD" 1>nul 2>nul
-	if %errorlevel%==0 (
-		echo Optimisation du SSD
-		fsutil behavior set DisableDeleteNotify 0 1>nul 2>nul
-		fsutil behavior set DisableLastAccess 1 1>nul 2>nul
-		reg add "HKLM\SOFTWARE\Microsoft\Dfrg\BootOptimizeFunction" /v Enable /t REG_SZ /d N /f 1>nul 2>nul
-		reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnableBoottrace /t REG_DWORD /d 0 /f 1>nul 2>nul
-		reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f 1>nul 2>nul
-		reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnableSuperfetch /t REG_DWORD /d 0 /f 1>nul 2>nul
-		sc stop "Superfetch" 1>nul 2>nul
-		sc config "Superfetch" start= Disabled 1>nul 2>nul
-		sc stop "SysMain" 1>nul 2>nul
-		sc config "SysMain" start= Disabled 1>nul 2>nul
-		schtasks /Delete /F /TN "Microsoft\Windows\Defrag\ScheduledDefrag" 1>nul 2>nul
-		echo.
+	if not "%build_win%"=="5.0" (
+		powershell -command "Get-PhysicalDisk | select MediaType" | find /i "SD" 1>nul 2>nul
+		if %errorlevel%==0 (
+			echo Optimisation du SSD
+			fsutil behavior set DisableDeleteNotify 0 1>nul 2>nul
+			fsutil behavior set DisableLastAccess 1 1>nul 2>nul
+			reg add "HKLM\SOFTWARE\Microsoft\Dfrg\BootOptimizeFunction" /v Enable /t REG_SZ /d N /f 1>nul 2>nul
+			reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnableBoottrace /t REG_DWORD /d 0 /f 1>nul 2>nul
+			reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f 1>nul 2>nul
+			reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnableSuperfetch /t REG_DWORD /d 0 /f 1>nul 2>nul
+			sc stop "Superfetch" 1>nul 2>nul
+			sc config "Superfetch" start= Disabled 1>nul 2>nul
+			sc stop "SysMain" 1>nul 2>nul
+			sc config "SysMain" start= Disabled 1>nul 2>nul
+			schtasks /Delete /F /TN "Microsoft\Windows\Defrag\ScheduledDefrag" 1>nul 2>nul
+			echo.
+		)
+		echo Optimisation terminee
 	)
-	echo Optimisation terminee
 	echo.
 	call :callforrestart
 goto main
@@ -728,7 +773,11 @@ goto main
 			) else if "%%i"=="VisualCppRedist_AIO_x86_x64.exe" (
 				"%~dp0\%%i" /ai /gm2
 			) else (
-				"%~dp0\%%i" /quiet /norestart
+				if "%build_win%"=="5.0" (
+					"%~dp0\%%i" -q -z
+				) else (
+					"%~dp0\%%i" /quiet /norestart
+				)
 			)
 			if !errorlevel! EQU 0 (
 				echo OK
