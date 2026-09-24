@@ -65,34 +65,23 @@ if %errorlevel%==1 (
 	echo Votre configuration systeme :
 	echo -----------------------------
 	echo.
-	if "%build_win%"=="5.0" (
-		echo.
-		ver
-		echo.
-		echo Architecture : %PROCESSOR_ARCHITECTURE%
-	) else (
-		for /f "tokens=2 delims==" %%a in ('wmic os get Caption /value 2^>nul') do for /f "delims=" %%b in ("%%a") do set "Caption=%%b"
-		for /f "tokens=2 delims==" %%a in ('wmic os get CSDVersion /value 2^>nul') do for /f "delims=" %%b in ("%%a") do set "CSDVersion=%%b"
-		for /f "tokens=2 delims==" %%a in ('wmic os get Version /value 2^>nul') do for /f "delims=" %%b in ("%%a") do set "Version=%%b"
-		echo 	Systeme d'exploitation : %Caption%
-		if not "%CSDVersion%"==" " if not "%CSDVersion%"="" (
-			echo 	Service Pack :           %CSDVersion%
-		) else (
-			echo 	Service Pack :           RTM
-		)
-		echo 	Architecture :           %PROCESSOR_ARCHITECTURE%
-		echo 	Version :                %Version%
-		ver | find /i "version 5" 1>nul 2>nul
-		if %errorlevel%==0 (
-			for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLab" 2^>nul') do (
-				echo 	Build :                  %%b
-			)
-		) else (
-			for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| Find "BuildLabEx" 2^>nul') do (
-				echo 	Build :                  %%b
-			)
-		)
-	)
+	if "%build_win%"=="5.0" echo.
+	if "%build_win%"=="5.0" ver
+	if "%build_win%"=="5.0" echo.
+	if "%build_win%"=="5.0" echo Architecture : %PROCESSOR_ARCHITECTURE%
+	if not "%build_win%"=="5.0" for /f "tokens=2 delims==" %%a in ('wmic os get Caption /value 2^>nul') do for /f "delims=" %%b in ("%%a") do set "Caption=%%b"
+	if not "%build_win%"=="5.0" for /f "tokens=2 delims==" %%a in ('wmic os get CSDVersion /value 2^>nul') do for /f "delims=" %%b in ("%%a") do set "CSDVersion=%%b"
+	if not "%build_win%"=="5.0" for /f "tokens=2 delims==" %%a in ('wmic os get Version /value 2^>nul') do for /f "delims=" %%b in ("%%a") do set "Version=%%b"
+	if not "%build_win%"=="5.0" echo 	Systeme d'exploitation : %Caption%
+	if not "%build_win%"=="5.0" if not "%CSDVersion%"=="" if not "%CSDVersion%"==" " echo 	Service Pack :           %CSDVersion%
+	if not "%build_win%"=="5.0" if "%CSDVersion%"=="" echo 	Service Pack :           RTM
+	if not "%build_win%"=="5.0" echo 	Architecture :           %PROCESSOR_ARCHITECTURE%
+	if not "%build_win%"=="5.0" echo 	Version :                %Version%
+	ver | find /i "version 6" 1>nul 2>nul
+	if not errorlevel 1 set "WIN6=1"
+	if errorlevel 1 set "WIN6=0"
+	if "%WIN6%"=="0" if not "%build_win%"=="5.0" for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| find "BuildLab" 2^>nul') do echo 	Build :                  %%b
+	if "%WIN6%"=="1" if not "%build_win%"=="5.0" for /f "tokens=2,*" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" 2^>nul ^| find "BuildLabEx" 2^>nul') do echo 	Build :                  %%b
 	goto OSOK
 
 :OSNoOK
