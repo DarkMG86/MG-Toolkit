@@ -23,7 +23,7 @@ if %errorlevel%==1 (
 
 :: Controle de la version de Windows utilisee
 :TestOS
-	set build_win=""
+	set "os_valide=0"
 	for /f "tokens=3-4 delims=[.] " %%A in ('ver') do (
     	set "major=%%A"
    		set "minor=%%B"
@@ -35,7 +35,14 @@ if %errorlevel%==1 (
 		)
 	)
 	set "build_win=%major%.%minor%"
-	if "%build_win%"=="" (
+	if "%build_win%"=="5.0" set "os_valide=1"
+	if "%build_win%"=="5.1" set "os_valide=1"
+	if "%build_win%"=="5.2" set "os_valide=1"
+	if "%build_win%"=="6.0" set "os_valide=1"
+	if "%build_win%"=="6.1" set "os_valide=1"
+	if "%build_win%"=="6.2" set "os_valide=1"
+	if "%build_win%"=="6.3" set "os_valide=1"
+	if "%os_valide%"=="0" (
 		goto OSNoOK
 	)
 
