@@ -52,8 +52,8 @@ if %errorlevel%==1 (
 	call :titre
 	echo.
 	echo.
-	echo 	Votre configuration systeme :
-	echo 	-----------------------------
+	echo Votre configuration systeme :
+	echo -----------------------------
 	echo.
 	if "%build_win%"=="5.0" (
 		echo.
