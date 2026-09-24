@@ -61,17 +61,16 @@ if %errorlevel%==1 (
 		echo.
 		echo Architecture : %PROCESSOR_ARCHITECTURE%
 	) else (
-		for /f "tokens=*" %%f in ('wmic os get Caption /value ^| find "="') do set "%%f"
+		for /f "tokens=2 delims==" %%a in ('wmic os get Caption /value 2^>nul') do for /f "delims=" %%b in ("%%a") do set "Caption=%%b"
+		for /f "tokens=2 delims==" %%a in ('wmic os get CSDVersion /value 2^>nul') do for /f "delims=" %%b in ("%%a") do set "CSDVersion=%%b"
+		for /f "tokens=2 delims==" %%a in ('wmic os get Version /value 2^>nul') do for /f "delims=" %%b in ("%%a") do set "Version=%%b"
 		echo 	Systeme d'exploitation : %Caption%
-		for /f "tokens=*" %%f in ('wmic os get CSDVersion /value ^| find "="') do set "%%f"
-		if "%CSDVersion%" NEQ "" (
+		if not "%CSDVersion%"==" " if not "%CSDVersion%"="" (
 			echo 	Service Pack :           %CSDVersion%
 		) else (
 			echo 	Service Pack :           RTM
 		)
 		echo 	Architecture :           %PROCESSOR_ARCHITECTURE%
-		for /f "tokens=*" %%f in ('wmic os get Version /value ^| find "="') do set "%%f"
-		for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=%%h& set build=%%i& set revision=%%j)
 		echo 	Version :                %Version%
 		ver | find /i "version 5" 1>nul 2>nul
 		if %errorlevel%==0 (
