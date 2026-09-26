@@ -154,7 +154,7 @@ goto main
 	set /p choix=Sélectionnez l'opération à effectuer (0 pour quitter): 
 	if /i "%choix%"=="1" goto activation_mas
 	if /i "%choix%"=="2" goto activation_status
-	if /i "%choix%"=="3" goto configuration_performnces
+	if /i "%choix%"=="3" goto configuration_performances
 	if /i "%choix%"=="4" goto configuration_privacy
 	if /i "%choix%"=="5" OptionalFeatures.exe
 	if /i "%choix%"=="6" goto oem_information
