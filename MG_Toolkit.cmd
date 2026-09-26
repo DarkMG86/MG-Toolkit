@@ -61,8 +61,8 @@ if exist "%TEMP%\version.txt" (
 		powershell -NoProfile -Command "(New-Object Net.WebClient).DownloadFile('https://github.com/DarkMG86/MG-Toolkit/raw/refs/heads/main/MG_Toolkit.cmd', '%~dp0MG_Toolkit_new.cmd')"
 		if exist "%~dp0MG_Toolkit_new.cmd" (
 			timeout /t 1 >nul
-			del /f /q "%~dp0MG_Toolkit.cmd"
-			rename "%~dp0MG_Toolkit_new.cmd" "MG_Toolkit.cmd"
+			del /f /q "%~dp0MG_Toolkit.cmd" >nul 2>&1
+			rename "%~dp0MG_Toolkit_new.cmd" "MG_Toolkit.cmd" >nul 2>&1
 			echo La version %green%%controle_version_toolkit%%u% a été téléchargée avec succès
 			echo Veuillez exécuter à nouveau le programme
 			echo.
