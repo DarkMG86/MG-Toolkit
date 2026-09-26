@@ -23,34 +23,20 @@ if errorlevel 1 (
 
 :: Controle de la version de Windows utilisee
 :TestOS
-	set build_win=""
+	set "build_win="
 	ver | find /i "version 5.1" >nul 2>&1
-	if %errorlevel%==0 (
-		set "build_win=5"
-	)
+	if not errorlevel 1 set "build_win=5"
 	ver | find /i "version 5.2" >nul 2>&1
-	if %errorlevel%==0 (
-		set "build_win=5"
-	)
+	if not errorlevel 1 set "build_win=5"
 	ver | find /i "version 6.0" >nul 2>&1
-	if %errorlevel%==0 (
-		set "build_win=6"
-	)
+	if not errorlevel 1 set "build_win=6"
 	ver | find /i "version 6.1" >nul 2>&1
-	if %errorlevel%==0 (
-		set "build_win=6"
-	)
+	if not errorlevel 1 set "build_win=6"
 	ver | find /i "version 6.2" >nul 2>&1
-	if %errorlevel%==0 (
-		set "build_win=6"
-	)
+	if not errorlevel 1 set "build_win=6"
 	ver | find /i "version 6.3" >nul 2>&1
-	if %errorlevel%==0 (
-		set "build_win=6"
-	)
-	if "%build_win%"=="" (
-		goto OSNoOK
-	)
+	if not errorlevel 1 set "build_win=6"
+	if not defined build_win goto OSNoOK
 
 :AfterTest
 	cls
