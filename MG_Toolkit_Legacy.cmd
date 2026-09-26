@@ -1,4 +1,4 @@
-:: Paramétrage du script et vérification de la compatibilité
+:: Parametrage du script et verification de la compatibilite
 @echo off
 pushd "%~dp0"
 chcp 1252 >nul
@@ -780,7 +780,7 @@ goto :eof
 
 :: Redemarrage de Windows
 :callforrestart
-	set /p choix=Voulez-vous redémarrer maintenant ? (O/N) : 
+	set /p choix=Voulez-vous redemarrer maintenant ? (O/N) : 
 	if /i "%choix%"=="o" (
 		shutdown -r -f -t 0
 		exit
