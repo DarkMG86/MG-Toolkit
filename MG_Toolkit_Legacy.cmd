@@ -237,10 +237,14 @@ goto main
 	netsh int tcp set heuristics disabled >nul 2>&1
 	netsh int tcp set supplemental Internet congestionprovider=CUBIC >nul 2>&1
 	netsh int tcp set supplemental template=custom icw=10 >nul 2>&1
-	powercfg -duplicatescheme a1841308-3541-4fab-bc81-f71556f20b4a >nul 2>&1
-	powercfg -duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e >nul 2>&1
-	powercfg -duplicatescheme 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c >nul 2>&1
-	powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+	powercfg -list | findstr /i "a1841308-3541-4fab-bc81-f71556f20b4a" >nul 2>&1
+	if errorlevel 1 powercfg -duplicatescheme a1841308-3541-4fab-bc81-f71556f20b4a >nul 2>&1
+	powercfg -list | findstr /i "381b4222-f694-41f0-9685-ff5bb260df2e" >nul 2>&1
+	if errorlevel 1 powercfg -duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e >nul 2>&1
+	powercfg -list | findstr /i "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c" >nul 2>&1
+	if errorlevel 1 powercfg -duplicatescheme 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c >nul 2>&1
+	powercfg -list | findstr /i "e9a42b02-d5df-448d-aa00-03f14749eb61" >nul 2>&1
+	if errorlevel 1 powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
 	reg add "HKCU\Control Panel\Desktop" /v AutoEndTasks /t REG_SZ /d 1 /f >nul 2>&1
 	reg add "HKCU\Control Panel\Desktop" /v HungAppTimeout /t REG_SZ /d 3000 /f >nul 2>&1
 	reg add "HKCU\Control Panel\Desktop" /v LowLevelHooksTimeout /t REG_SZ /d 4000 /f >nul 2>&1
@@ -327,7 +331,7 @@ goto main
 	powercfg -hibernate off >nul 2>&1
 	echo.
 	if "%build_win%"==6 (
-		powershell -command "Get-PhysicalDisk | select MediaType" | find /i "SD" >nul 2>&1
+		powershell -NoProfile -Command "Get-PhysicalDisk | select MediaType" | find /i "SD" >nul 2>&1
 		if %errorlevel%==0 (
 			echo Optimisation du SSD
 			fsutil behavior set DisableDeleteNotify 0 >nul 2>&1
@@ -434,7 +438,7 @@ goto main
 	reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\ClientTelemetry" /f >nul 2>&1
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\ClientTelemetry" /v DontRetryOnError /t REG_DWORD /d 1 /f >nul 2>&1
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\ClientTelemetry" /v IsCensusDisabled /t REG_DWORD /d 1 /f >nul 2>&1
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\ClientTelemetry" /v TaskEnableRun /t REG_DWORD /d 1 /f >nul 2>&1
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\ClientTelemetry" /v TaskEnableRun /t REG_DWORD /d 0 /f >nul 2>&1
 	for %%i in (InstallInfoCheck,ARPInfoCheck,MediaInfoCheck,FileInfoCheck) do reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Tracing" /v %%i /t REG_DWORD /d 0 /f >nul 2>&1
 	reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags" /v UpgradeEligible /f >nul 2>&1
 	reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\TelemetryController" /f >nul 2>&1
@@ -496,6 +500,9 @@ goto main
 	echo.
 	echo Modification des informations OEM Windows
 	echo.
+	set "OEM_FABRICANT="
+	set "OEM_MODELE="
+	set "OEM_URL="
 	for /f "tokens=2,*" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Manufacturer 2^>nul') do set "OEM_FABRICANT=%%B"
 	for /f "tokens=2,*" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model 2^>nul') do set "OEM_MODELE=%%B"
 	for /f "tokens=2,*" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v SupportURL 2^>nul') do set "OEM_URL=%%B"
@@ -506,9 +513,10 @@ goto main
 	echo URL du support : %OEM_URL%
 	echo ======================================
 	echo.
-	set /p confirm=Souhaitez-vous modifier ces informations (O/N) : 
-	echo.
-	if /i "%confirm%" NEQ "O" (
+	set "confirm="
+	set /p "confirm=Souhaitez-vous modifier ces informations (O/N) : "
+	if /i not "%confirm%"=="O" (
+		echo.
 		echo Annulation. Aucune modification n'a ete effectuee.
 		echo.
 		pause
@@ -528,12 +536,16 @@ goto main
 	echo.
 	set /p confirm=Confirmer ces informations (O/N) : 
 	echo.
-	if /i "%confirm%" NEQ "O" (
+	set "confirm="
+	set /p "confirm=Confirmer ces informations (O/N) : "
+	if /i not "%confirm%"=="O" (
+		echo.
 		echo Annulation. Aucune modification n'a ete effectuee.
 		echo.
 		pause
 		goto main
 	)
+	echo.
 	echo Mise a jour du registre...
 	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Manufacturer /t REG_SZ /d "%manufacturer%" /f >nul
 	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model /t REG_SZ /d "%model%" /f >nul
@@ -629,7 +641,7 @@ goto main
 	echo Analyse du systeme de fichiers Windows (CHKDSK)
 	set /p confirm=Souhaitez-vous analyser le systeme de fichiers au redemarrage ? [O/N] :
 	if /i "%confirm%"=="O" (
-		fsutil dirty set %SYSTEMDRIVE%
+		chkdsk %SYSTEMDRIVE% /f
 	)
 	echo.
 	echo Votre ordinateur doit redemarrer pour terminer le processus de reparation
@@ -732,7 +744,7 @@ goto main
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0*.appx"') do (
 			<nul set /p=Installation de %%i...
-			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0%%i'" >nul 2>&1
+			powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Add-AppxPackage -Path '%~dp0%%i'" >nul 2>&1
 			set "error=!errorlevel!"
 			if !error!==0 (
 				echo OK
@@ -745,7 +757,7 @@ goto main
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0*.appxbundle"') do (
 			<nul set /p=Installation de %%i...
-			powershell.exe -executionpolicy bypass -command "Add-AppxPackage -Path '%~dp0%%i'" >nul 2>&1
+			powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Add-AppxPackage -Path '%~dp0%%i'" >nul 2>&1
 			set "error=!errorlevel!"
 			if !error!==0 (
 				echo OK
