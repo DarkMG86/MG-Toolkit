@@ -11,12 +11,12 @@ mode con cols=90 lines=40
 
 :: Contrôle des droits d'administrateur
 net session >nul 2>&1
-if %errorlevel%==1 (
-    echo.
+if errorlevel 1 (
+	echo.
 	echo Ce script necessite des droits d'administrateur !
-    echo.
-    pause
-    exit
+	echo.
+	pause
+	exit
 )
 
 
