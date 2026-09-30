@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260926
+set toolkit_version=20260930
 title MG Toolkit Legacy (v%toolkit_version%)
 mode con cols=90 lines=40
 
@@ -100,44 +100,29 @@ goto main
 	echo.
 	call :titre
 	echo.
-	echo   Activation de Windows / Office
-	echo.
-	echo 	1.  Activation (MAS)
-	echo 	2.  Status d'activation
-	echo.
 	echo   Utilitaires de configuration et maintenance
 	echo.
-	echo 	3.  Configuration performances
-	echo 	4.  Configuration vie privee
-	echo 	5.  Modification informations OEM
+	echo 	1.  Configuration performances
+	echo 	2.  Configuration vie privee
+	echo 	3.  Modification informations OEM
 	echo.
 	echo   Utilitaires de maintenance
 	echo.
-	echo 	6.  Defragmentation systeme
-	echo 	7.  Nettoyage systeme
-	echo 	8.  Reparation reseau
-	echo 	9.  Reparation systeme Windows
+	echo 	4.  Defragmentation systeme
+	echo 	5.  Nettoyage systeme
+	echo 	6.  Reparation reseau
+	echo 	7.  Reparation systeme Windows
 	echo.
 	echo   Divers
 	echo.
-	echo 	10. Installer des mises a jour
-	echo 	11. Logitheque en ligne
+	echo 	8. Installer des mises a jour
+	echo 	9. Logitheque en ligne
 	echo.
 	echo __________________________________________________________________________________________
 	echo.
 	set /p choix=Selectionnez l'operation a effectuer (0 pour quitter): 
-	if /i "%choix%"=="1" (
-		if "%build_win%"=="5" (
-			echo.
-			echo Cette fonctionnalite n'est pas compatible avec Windows XP / Server 2003 !
-			pause
-			goto main
-		)
-		goto activation_mas
-	)
-	if /i "%choix%"=="2" goto activation_status
-	if /i "%choix%"=="3" goto configuration_performances
-	if /i "%choix%"=="4" (
+	if /i "%choix%"=="1" goto configuration_performances
+	if /i "%choix%"=="2" (
 		if "%build_win%"=="5" (
 			echo.
 			echo Cette fonctionnalite n'est pas compatible avec Windows XP / Server 2003 !
@@ -153,7 +138,7 @@ goto main
 		)
 		goto configuration_privacy
 	)
-	if /i "%choix%"=="5" (
+	if /i "%choix%"=="3" (
 		if "%build_win%"=="5" (
 			echo.
 			echo Cette fonctionnalite n'est pas compatible avec Windows XP / Server 2003 !
@@ -162,55 +147,13 @@ goto main
 		)
 		goto oem_information
 	)
-	if /i "%choix%"=="6" goto defrag
-	if /i "%choix%"=="7" goto nettoyage
-	if /i "%choix%"=="8" goto reparation_reseau
-	if /i "%choix%"=="9" goto reparation_win
-	if /i "%choix%"=="10" goto windows_update
-	if /i "%choix%"=="11" start https://1drv.ms/f/c/011dbcd351618514/IgAUhWFR07wdIIAB3voDAAAAAcBLZB30-366q14Z-fKgndE
+	if /i "%choix%"=="4" goto defrag
+	if /i "%choix%"=="5" goto nettoyage
+	if /i "%choix%"=="6" goto reparation_reseau
+	if /i "%choix%"=="7" goto reparation_win
+	if /i "%choix%"=="8" goto windows_update
+	if /i "%choix%"=="9" start https://1drv.ms/f/c/011dbcd351618514/IgAUhWFR07wdIIAB3voDAAAAAcBLZB30-366q14Z-fKgndE
 	if /i "%choix%"=="0" exit
-goto main
-
-
-
-:: Activation de Windows / Office
-:activation_mas
-	cls
-	echo.
-	call :titre
-	echo.
-	echo Activation de Windows - Office (MAS)
-	echo.
-	echo IMPORTANT :
-	echo Une connexion Internet est requise.
-	echo Il est necessaire de desactiver votre antivirus avant de poursuivre !
-	echo.
-	pause
-	powershell -Command "(irm https://get.activated.win | iex)" >nul 2>&1
-goto main
-
-
-
-:: Status de l'activation de Windows
-:activation_status
-	cls
-	echo.
-	call :titre
-	echo.
-	echo Status de l'activation de Windows
-	ver | find /i "version 5" 1>nul
-	if %errorlevel%==0 (
-		%SYSTEMROOT%\system32\oobe\msoobe /a
-		echo.
-		pause
-	) else (
-		echo.
-		ver
-		cscript //nologo %SYSTEMROOT%\system32\slmgr.vbs /dli
-		cscript //nologo %SYSTEMROOT%\system32\slmgr.vbs /xpr
-		echo.
-		pause
-	)
 goto main
 
 
@@ -660,12 +603,15 @@ goto main
 	echo Windows Update
 	echo.
 	echo Le programme va maintenant installer les mises a jour presentes dans le dossier actuel.
-	echo En cas d'erreur ou d'incompatibilite, un message s'affichera.
 	echo.
 	echo Les types de fichier pris en charge sont :
 	echo .cab .msu .exe .appx .appxbundle
 	echo DirectX_Redist_Repack_x86_x64.exe (abbodi1406)
 	echo VisualCppRedist_AIO_x86_x64.exe (abbodi1406)
+	echo.
+	echo Remarque :
+	echo Le programme ne verifie pas la compatibilite des fichiers avec votre systeme.
+	echo Il est recommande de verifier leur compatibilite avant de les installer !
 	echo.
 	echo __________________________________________________________________________________________
 	echo.

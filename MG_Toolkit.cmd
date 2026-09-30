@@ -3,13 +3,11 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260926
+set toolkit_version=20260930
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 ver | find /i "version 10" >nul 2>&1
-if errorlevel 1 (
-	goto OSNoOK
-)
+if errorlevel 1	goto OSNoOK
 for /f "delims=" %%i in ('powershell -NoProfile -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"') do set Caption=%%i
 for /f "tokens=4,5,6,7 delims=[]. " %%g in ('ver') do (set major=%%g& set minor=%%h& set build=%%i& set revision=%%j)
 for /f "delims=" %%i in ('powershell -NoProfile -Command "(Get-CimInstance Win32_BIOS).Manufacturer"') do set BIOS_FABRICANT=%%i
@@ -986,13 +984,16 @@ goto main
 	echo %red%Windows Update%u%
 	echo.
 	echo Le programme va maintenant installer les mises à jour présentes dans le dossier actuel.
-	echo En cas d'erreur ou d'incompatibilité, un message s'affichera.
 	echo.
 	echo Les types de fichier pris en charge sont :
 	echo .cab .msu .exe .appx .appxbundle .msix .msixbundle
 	echo DirectX_Redist_Repack_x86_x64.exe (abbodi1406)
 	echo VisualCppRedist_AIO-arm64.exe (abbodi1406)
 	echo VisualCppRedist_AIO_x86_x64.exe (abbodi1406)
+	echo.
+	echo Remarque :
+	echo Le programme ne vérifie pas la compatibilité des mises à jour avec votre système.
+	echo Il est recommandé de vérifier leur compatibilité avant de les installer !
 	echo.
 	echo __________________________________________________________________________________________
 	echo.
