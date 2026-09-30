@@ -992,7 +992,7 @@ goto main
 	echo VisualCppRedist_AIO_x86_x64.exe (abbodi1406)
 	echo.
 	echo Remarque :
-	echo Le programme ne vérifie pas la compatibilité des mises à jour avec votre système.
+	echo Le programme ne vérifie pas la compatibilité des fichiers avec votre système.
 	echo Il est recommandé de vérifier leur compatibilité avant de les installer !
 	echo.
 	echo __________________________________________________________________________________________
