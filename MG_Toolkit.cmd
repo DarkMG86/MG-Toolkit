@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20260930
+set toolkit_version=20261016
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 ver | find /i "version 10" >nul 2>&1
@@ -1010,7 +1010,7 @@ goto main
 	if exist "%~dp0*.cab" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0*.cab"') do (
-			<nul set /p=Installation de %%i...
+			<nul set /p=Installation de %%i... 
 			dism /online /add-package /packagepath:"%~dp0%%i" /quiet /norestart >nul 2>&1
 			set "error=!errorlevel!"
 			if !error!==0 (
@@ -1025,7 +1025,7 @@ goto main
 	if exist "%~dp0*.msu" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0*.msu"') do (
-			<nul set /p=Installation de %%i...
+			<nul set /p=Installation de %%i... 
 			dism /online /add-package /packagepath:"%~dp0%%i" /quiet /norestart >nul 2>&1
 			set "error=!errorlevel!"
 			if !error!==0 (
@@ -1040,7 +1040,7 @@ goto main
 	if exist "%~dp0*.exe" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0*.exe"') do (
-			<nul set /p=Installation de %%i...
+			<nul set /p=Installation de %%i... 
 			if "%%i"=="DirectX_Redist_Repack_x86_x64.exe" (
 				"%~dp0%%i" /ai /gm2
 			) else if "%%i"=="VisualCppRedist_AIO-arm64.exe" (
@@ -1063,7 +1063,7 @@ goto main
 	if exist "%~dp0*.appx" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0*.appx"') do (
-			<nul set /p=Installation de %%i...
+			<nul set /p=Installation de %%i... 
 			powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Add-AppxPackage -Path '%~dp0%%i'" >nul 2>&1
 			set "error=!errorlevel!"
 			if !error!==0 (
@@ -1076,7 +1076,7 @@ goto main
 	if exist "%~dp0*.appxbundle" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0*.appxbundle"') do (
-			<nul set /p=Installation de %%i...
+			<nul set /p=Installation de %%i... 
 			powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Add-AppxPackage -Path '%~dp0%%i'" >nul 2>&1
 			set "error=!errorlevel!"
 			if !error!==0 (
@@ -1089,7 +1089,7 @@ goto main
 	if exist "%~dp0*.msix" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0*.msix"') do (
-			<nul set /p=Installation de %%i...
+			<nul set /p=Installation de %%i... 
 			powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Add-AppxPackage -Path '%~dp0%%i'" >nul 2>&1
 			set "error=!errorlevel!"
 			if !error!==0 (
@@ -1102,7 +1102,7 @@ goto main
 	if exist "%~dp0*.msixbundle" (
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0*.msixbundle"') do (
-			<nul set /p=Installation de %%i...
+			<nul set /p=Installation de %%i... 
 			powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Add-AppxPackage -Path '%~dp0%%i'" >nul 2>&1
 			set "error=!errorlevel!"
 			if !error!==0 (
