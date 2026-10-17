@@ -11,15 +11,8 @@ mode con cols=90 lines=40
 
 :: Contrôle des droits d'administrateur
 if /i "%PROCESSOR_ARCHITECTURE%"=="ARM" (
-	if /i not "%~1"=="am_admin" (
-		powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -ArgumentList 'am_admin' -Verb RunAs"
-		exit /b
-	)
-	reg query HKU\S-1-5-19 1>nul 2>nul || (
-		echo.
-		echo Ce script necessite des droits d'administrateur !
-		echo.
-		pause
+	if /i not "%~1"=="admin" (
+		powershell -NoProfile -Command "Start-Process -Verb RunAs -FilePath '%ComSpec%' -ArgumentList '/c ""%~f0"" admin'"
 		exit /b
 	)
 ) else (
