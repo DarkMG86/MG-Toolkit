@@ -3,20 +3,34 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20261016
+set toolkit_version=20261017
 title MG Toolkit Legacy (v%toolkit_version%)
 mode con cols=90 lines=40
 
 
 
 :: Contrôle des droits d'administrateur
-net session >nul 2>&1
-if errorlevel 1 (
-	echo.
-	echo Ce script necessite des droits d'administrateur !
-	echo.
-	pause
-	exit
+if /i "%PROCESSOR_ARCHITECTURE%"=="ARM" (
+	if /i not "%~1"=="am_admin" (
+		powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -ArgumentList 'am_admin' -Verb RunAs"
+		exit /b
+	)
+	reg query HKU\S-1-5-19 1>nul 2>nul || (
+		echo.
+		echo Ce script necessite des droits d'administrateur !
+		echo.
+		pause
+		exit /b
+	)
+) else (
+	net session >nul 2>&1
+	if errorlevel 1 (
+		echo.
+		echo Ce script necessite des droits d'administrateur !
+		echo.
+		pause
+		exit /b
+	)
 )
 
 
