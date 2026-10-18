@@ -107,12 +107,14 @@ goto main
 	call :titre
 	echo.
 	echo   Utilitaires de configuration et maintenance
+	echo   -------------------------------------------
 	echo.
 	echo 	1.  Configuration performances
 	echo 	2.  Configuration vie privee
 	echo 	3.  Modification informations OEM
 	echo.
 	echo   Utilitaires de maintenance
+	echo   --------------------------
 	echo.
 	echo 	4.  Defragmentation systeme
 	echo 	5.  Nettoyage systeme
@@ -120,6 +122,7 @@ goto main
 	echo 	7.  Reparation systeme Windows
 	echo.
 	echo   Divers
+	echo   ------
 	echo.
 	echo 	8. Installer des mises a jour
 	echo 	9. Logitheque en ligne
