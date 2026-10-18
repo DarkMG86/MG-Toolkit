@@ -448,6 +448,7 @@ goto main
 	call :titre
 	echo.
 	echo Modification des informations OEM Windows
+	echo -----------------------------------------
 	echo.
 	set "OEM_FABRICANT="
 	set "OEM_MODELE="
@@ -514,6 +515,7 @@ goto main
 	call :titre
 	echo.
 	echo Defragmentation de Windows
+	echo --------------------------
 	echo.
 	defrag /v %SYSTEMDRIVE%
 	echo.
@@ -585,13 +587,12 @@ goto main
 		)
 	)
 	echo Reparation de Windows (SFC)
+	echo.
 	sfc -scannow
 	echo.
 	echo Analyse du systeme de fichiers Windows (CHKDSK)
-	set /p confirm=Souhaitez-vous analyser le systeme de fichiers au redemarrage ? [O/N] :
-	if /i "%confirm%"=="O" (
-		chkdsk %SYSTEMDRIVE% /f
-	)
+	echo.
+	chkdsk %SYSTEMDRIVE% /f
 	echo.
 	echo Votre ordinateur doit redemarrer pour terminer le processus de reparation
 	echo.
@@ -607,6 +608,7 @@ goto main
 	call :titre
 	echo.
 	echo Windows Update
+	echo --------------
 	echo.
 	echo Le programme va maintenant installer les mises a jour presentes dans le dossier actuel.
 	echo.
