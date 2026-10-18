@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20261016
+set toolkit_version=20261018
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 ver | find /i "version 10" >nul 2>&1
@@ -902,10 +902,8 @@ goto main
 	sfc -scannow
 	echo.
 	echo %red%Analyse du systeme de fichiers Windows (CHKDSK)%u%
-	set /p confirm=Souhaitez-vous analyser le système de fichiers au redémarrage ? [O/N] :
-	if /i "%confirm%" EQU "O" (
-		chkdsk %SYSTEMDRIVE% /f
-	)
+	echo.
+	chkdsk %SYSTEMDRIVE% /f
 	echo.
 	echo %green%Votre ordinateur doit redémarrer pour terminer le processus de réparation%u%
 	echo.
