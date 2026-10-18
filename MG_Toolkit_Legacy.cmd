@@ -587,7 +587,6 @@ goto main
 		)
 	)
 	echo Reparation de Windows (SFC)
-	echo.
 	sfc -scannow
 	echo.
 	echo Analyse du systeme de fichiers Windows (CHKDSK)
