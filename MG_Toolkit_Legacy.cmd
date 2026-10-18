@@ -1,15 +1,14 @@
 :: Parametrage du script et verification de la compatibilite
 @echo off
 pushd "%~dp0"
-chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20261017
+set toolkit_version=20261018
 title MG Toolkit Legacy (v%toolkit_version%)
 mode con cols=90 lines=40
 
 
 
-:: Contrôle des droits d'administrateur
+:: Controle des droits d'administrateur
 if /i "%PROCESSOR_ARCHITECTURE%"=="ARM" (
 	if /i not "%~1"=="admin" (
 		powershell -NoProfile -Command "Start-Process -Verb RunAs -FilePath '%ComSpec%' -ArgumentList '/c ""%~f0"" admin'"
@@ -321,7 +320,7 @@ goto main
 	sc config dmwappushservice start= Disabled >nul 2>&1
 	sc config WMPNetworkSvc start= Disabled >nul 2>&1
 	echo.
-	echo Desactivation des tâches planifiees
+	echo Desactivation des tï¿½ches planifiees
 	schtasks /Change /DISABLE /TN "Microsoft\Windows\SetupSQMTask" >nul 2>&1
 	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM" >nul 2>&1
 	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" >nul 2>&1
