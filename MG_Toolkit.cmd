@@ -3,7 +3,7 @@
 pushd "%~dp0"
 chcp 1252 >nul
 setlocal DisableDelayedExpansion
-set toolkit_version=20261018
+set toolkit_version=20261022
 title MG Toolkit (v%toolkit_version%)
 mode con cols=90 lines=40
 ver | find /i "version 10" >nul 2>&1
@@ -1014,7 +1014,7 @@ goto main
 			if !error!==0 (
 				echo OK
 			) else if !error!==3010 (
-				echo OK - redemarrage requis
+				echo OK - redémarrage requis
 			) else (
 				echo Erreur
 			)
@@ -1029,7 +1029,9 @@ goto main
 			if !error!==0 (
 				echo OK
 			) else if !error!==3010 (
-				echo OK - redemarrage requis
+				echo OK - redémarrage requis
+			) else if !error!==2359302 (
+ 			   echo NOK - déjà installé
 			) else (
 				echo Erreur
 			)
@@ -1052,7 +1054,7 @@ goto main
 			if !error!==0 (
 				echo OK
 			) else if !error!==3010 (
-				echo OK - redemarrage requis
+				echo OK - redémarrage requis
 			) else (
 				echo Erreur
 			)

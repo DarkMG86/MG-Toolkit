@@ -2,7 +2,7 @@
 @echo off
 pushd "%~dp0"
 setlocal DisableDelayedExpansion
-set toolkit_version=20261018
+set toolkit_version=20261022
 title MG Toolkit Legacy (v%toolkit_version%)
 mode con cols=90 lines=40
 
@@ -659,17 +659,14 @@ goto main
 		set found=1
 		for /f "delims=" %%i in ('dir /B "%~dp0*.msu"') do (
 			<nul set /p=Installation de %%i... 
-			if exist "%SYSTEMROOT%\System32\dism.exe" (
-				dism /online /add-package /packagepath:"%~dp0%%i" /quiet /norestart >nul 2>&1
-				set "error=!errorlevel!"
-			) else (
-				wusa.exe "%~dp0%%i" /quiet /norestart >nul 2>&1
-				set "error=!errorlevel!"
-			)
+			wusa.exe "%~dp0%%i" /quiet /norestart >nul 2>&1
+			set "error=!errorlevel!"
 			if !error!==0 (
 				echo OK
 			) else if !error!==3010 (
 				echo OK - redemarrage requis
+			) else if !error!==2359302 (
+ 				echo NOK - deja installe
 			) else (
 				echo Erreur
 			)
